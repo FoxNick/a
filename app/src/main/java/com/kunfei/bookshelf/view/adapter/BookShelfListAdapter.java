@@ -26,6 +26,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.kunfei.bookshelf.DbHelper;
+import com.kunfei.bookshelf.MApplication;
 import com.kunfei.bookshelf.R;
 import com.kunfei.bookshelf.bean.BookInfoBean;
 import com.kunfei.bookshelf.bean.BookShelfBean;
@@ -43,6 +44,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class BookShelfListAdapter extends RecyclerView.Adapter<BookShelfListAdapter.MyViewHolder> implements BookShelfAdapter {
     private boolean isArrange;
@@ -213,23 +215,35 @@ public class BookShelfListAdapter extends RecyclerView.Adapter<BookShelfListAdap
             bookShelfBean.setSerialNumber(index);
             AsyncTask.execute(() -> DbHelper.getDaoSession().getBookShelfBeanDao().insertOrReplace(bookShelfBean));
         }
-        if (bookShelfBean.isLoading()) {
+
+        Set<String> options  = MApplication.getInstance().getConfigPreferences().getStringSet(activity.getString(R.string.pk_bookshelf_show), null);
+        if(options!=null && options.contains("0")) {//显示
+
+            if (bookShelfBean.isLoading()) {
+                holder.bvUnread.setVisibility(View.INVISIBLE);
+                holder.rotateLoading.setVisibility(View.VISIBLE);
+                holder.rotateLoading.start();
+            } else {
+                holder.bvUnread.setBadgeCount(bookShelfBean.getUnreadChapterNum());
+                holder.bvUnread.setHighlight(bookShelfBean.getHasUpdate());
+                holder.rotateLoading.setVisibility(View.INVISIBLE);
+                holder.rotateLoading.stop();
+            }
+        }else{
             holder.bvUnread.setVisibility(View.INVISIBLE);
-            holder.rotateLoading.setVisibility(View.VISIBLE);
-            holder.rotateLoading.start();
-        } else {
-            holder.bvUnread.setBadgeCount(bookShelfBean.getUnreadChapterNum());
-            holder.bvUnread.setHighlight(bookShelfBean.getHasUpdate());
             holder.rotateLoading.setVisibility(View.INVISIBLE);
-            holder.rotateLoading.stop();
         }
 
-        holder.mpbDurprogress.setVisibility(View.VISIBLE);
-        holder.mpbDurprogress.setMaxProgress(books.get(index).getChapterListSize());
-        float speed = books.get(index).getChapterListSize()*1.0f/100;
+        if(options!=null && options.contains("1")) {//显示
+            holder.mpbDurprogress.setVisibility(View.VISIBLE);
+            holder.mpbDurprogress.setMaxProgress(books.get(index).getChapterListSize());
+            float speed = books.get(index).getChapterListSize() * 1.0f / 100;
 
-        holder.mpbDurprogress.setSpeed(speed<=0?1:speed);
-        holder.mpbDurprogress.setDurProgressWithAnim(books.get(index).getDurChapter());
+            holder.mpbDurprogress.setSpeed(speed <= 0 ? 1 : speed);
+            holder.mpbDurprogress.setDurProgressWithAnim(books.get(index).getDurChapter());
+        }else{
+            holder.mpbDurprogress.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

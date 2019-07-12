@@ -50,7 +50,7 @@
             android:gravity="left"
             android:padding="10dp"
             android:textColor="@color/tv_text_default"
-            android:text="此处是实验功能，没有经过严密测试，请谨慎打开，如打开后，发现bug,请提交错误日志到酷安：关注搜神阅读，私信给我。"
+            android:text="鉴于1.0.48到1.0.50的重大bug事件，特开启实验室功能。此处功能没有经过严密测试，请谨慎打开，如打开后，发现bug,请提交错误日志到酷安：关注搜神阅读，私信给我。"
             android:textSize="16sp"/>
     </LinearLayout>
 
