@@ -72,6 +72,8 @@ public class ReadBookControl {
 
     private  int longPressSetting;
 
+    private Boolean loadingAmin;
+
 
     private SharedPreferences preferences;
 
@@ -135,7 +137,10 @@ public class ReadBookControl {
         this.noPicSearch = preferences.getBoolean("noPicSearch", false);
         this.speechPitch = preferences.getInt("speechPitch", 10);
 
-        this.longPressSetting  = preferences.getInt("longPressSetting", 1);//默认500毫秒
+        this.longPressSetting  = preferences.getInt("longPressSetting", 3);//默认1500毫秒
+
+
+        this.loadingAmin = preferences.getBoolean("loadingAmin", false);
 
         initTextDrawableIndex();
     }
@@ -248,8 +253,21 @@ public class ReadBookControl {
     }
 
 
+    public Boolean getLoadingAmin() {
+        return preferences.getBoolean("loadingAmin",false);
+    }
+
+    public void setLoadingAmin(Boolean loadingAmin) {
+        this.loadingAmin = loadingAmin;
+        preferences.edit()
+                .putBoolean("loadingAmin", loadingAmin)
+                .apply();
+    }
+
+
+
     public int getLongPressSetting() {
-        return preferences.getInt("longPressSetting",1);
+        return preferences.getInt("longPressSetting",3);
     }
 
     public void setLongPressSetting(int longPressSetting) {
@@ -358,7 +376,7 @@ public class ReadBookControl {
     }
 
     public boolean getImmersionStatusBar() {
-        return preferences.getBoolean("immersionStatusBar", false);
+        return preferences.getBoolean("immersionStatusBar", true);
     }
 
     public void setImmersionStatusBar(boolean immersionStatusBar) {

@@ -1,6 +1,7 @@
 package com.kunfei.bookshelf.widget.my_page;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import com.kunfei.bookshelf.base.observer.MyObserver;
 import com.kunfei.bookshelf.bean.BookChapterBean;
@@ -46,6 +47,9 @@ public class PageLoaderNet extends PageLoader {
         if (!callback.getChapterList().isEmpty()) {
             isChapterListPrepare = true;
             // 打开章节
+            if(readBookControl.getLoadingAmin()) {
+                callback.inLoading(callback.getChapterList().get(book.getDurChapter()).getDurChapterName());
+            }
             skipToChapter(book.getDurChapter(), book.getDurChapterPage());
         } else {
             WebBookModel.getInstance().getChapterList(book)
@@ -59,6 +63,9 @@ public class PageLoaderNet extends PageLoader {
                         @Override
                         public void onNext(List<BookChapterBean> chapterBeanList) {
                             isChapterListPrepare = true;
+                            if(readBookControl.getLoadingAmin()) {
+                                callback.inLoading(chapterBeanList.get(book.getDurChapter()).getDurChapterName());
+                            }
                             // 目录加载完成
                             if (!chapterBeanList.isEmpty()) {
                                 BookshelfHelp.delChapterList(book.getNoteUrl());
@@ -93,7 +100,8 @@ public class PageLoaderNet extends PageLoader {
     @SuppressLint("DefaultLocale")
     private synchronized void loadContent(final int chapterIndex) {
         if (downloadingChapterList.size() >= 20) return;
-        if (DownloadingList(listHandle.CHECK, callback.getChapterList().get(chapterIndex).getDurChapterUrl()))
+        if (chapterIndex >= callback.getChapterList().size()
+            ||DownloadingList(listHandle.CHECK, callback.getChapterList().get(chapterIndex).getDurChapterUrl()))
             return;
         if (null != book && callback.getChapterList().size() > 0) {
             Observable.create((ObservableOnSubscribe<Integer>) e -> {
@@ -150,7 +158,7 @@ public class PageLoaderNet extends PageLoader {
     }
 
     /**
-     * 章节下载完成
+     * 章节下载完成parseCurChapter
      */
     private void finishContent(int chapterIndex) {
         if (chapterIndex == mCurChapterPos) {
@@ -199,6 +207,8 @@ public class PageLoaderNet extends PageLoader {
     // 装载上一章节的内容
     @Override
     void parsePrevChapter() {
+        Log.d("ceshi","PageLoaderNet:装载上一章节的内容parsePrevChapter");
+
         if (mCurChapterPos >= 1) {
             loadContent(mCurChapterPos - 1);
         }
@@ -208,7 +218,11 @@ public class PageLoaderNet extends PageLoader {
     // 装载当前章内容。
     @Override
     void parseCurChapter() {
+        Log.d("ceshi","PageLoaderNet:装载当前章内容。parseCurChapter");
+
         for (int i = mCurChapterPos; i < Math.min(mCurChapterPos + 5, book.getChapterListSize()); i++) {
+            Log.d("ceshi","loadContent:"+i);
+
             loadContent(i);
         }
         super.parseCurChapter();
@@ -217,6 +231,7 @@ public class PageLoaderNet extends PageLoader {
     // 装载下一章节的内容
     @Override
     void parseNextChapter() {
+        Log.d("ceshi","PageLoaderNet:装载下一章节的内容parseNextChapter");
         for (int i = mCurChapterPos; i < Math.min(mCurChapterPos + 5, book.getChapterListSize()); i++) {
             loadContent(i);
         }

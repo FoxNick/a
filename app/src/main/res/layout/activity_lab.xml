@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:leon="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.activity.LabActivity"
+    android:id="@+id/ll_content">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="?attr/actionBarStyle"
+        android:transitionName="sharedView"
+        tools:ignore="UnusedAttribute">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/background"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/headimage"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic__lab"
+            android:layout_height="wrap_content"
+            app:tint="@color/tv_text_secondary"
+            tools:ignore="RtlSymmetry"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:padding="10dp"
+            android:textColor="@color/tv_text_default"
+            android:text="此处是实验功能，没有经过严密测试，请谨慎打开，如打开后，发现bug,请提交错误日志到酷安：关注搜神阅读，私信给我。"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp"
+            android:background="@color/background"
+            android:gravity="center"
+            android:orientation="vertical">
+
+        <com.kunfei.bookshelf.widget.settingview.LSettingItem
+            android:id="@+id/item_open_loading_amin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/leonCheckBox"
+            android:background="@color/background"
+            leon:LtextColor="@color/tv_text_default"
+            leon:leftText="开启加载动态效果"
+            leon:introText="把app里的加载中替换成动态进度条，目前只修改了阅读界面部分进度条，其他正在修改中。"
+            leon:isShowUnderLine="true"
+
+            leon:rightStyle="iconCheck"/>
+
+        <com.kunfei.bookshelf.widget.settingview.LSettingItem
+            android:id="@+id/item_open_chapter_decoration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/leonCheckBox"
+            android:background="@color/background"
+            leon:LtextColor="@color/tv_text_default"
+            leon:leftText="开启章节装饰功能"
+            leon:introText="计划功能，暂时未实现。可以对章节第一页的标题上下空白，字体，换行，图片装饰等进行设置。"
+            leon:isShowUnderLine="true"
+            leon:rightStyle="iconCheck"/>
+
+        <com.kunfei.bookshelf.widget.settingview.LSettingItem
+            android:id="@+id/item_open_read_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/leonCheckBox"
+            android:background="@color/background"
+            leon:LtextColor="@color/tv_text_default"
+            leon:leftText="开启读取图文章节功能"
+            leon:introText="计划功能，暂时未实现。简单读取图片章节"
+            leon:isShowUnderLine="true"
+            leon:rightStyle="iconCheck"/>
+
+        <com.kunfei.bookshelf.widget.settingview.LSettingItem
+            android:id="@+id/item_open_read_font"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/leonCheckBox"
+            android:background="@color/background"
+            leon:LtextColor="@color/tv_text_default"
+            leon:leftText="开启字体选择高级界面"
+            leon:introText="计划功能，暂时未实现。体选择界面，可以任意选择目录，可以加粗，斜体，可以在线下载字体"
+            leon:isShowUnderLine="true"
+            leon:rightStyle="iconCheck"/>
+
+        <com.kunfei.bookshelf.widget.settingview.LSettingItem
+            android:id="@+id/item_open_read_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/leonCheckBox"
+            android:background="@color/background"
+            leon:LtextColor="@color/tv_text_default"
+            leon:leftText="开启缓存文件内容搜索功能"
+            leon:introText="计划功能，暂时未实现。可以搜索已缓存的书籍内容，可以针对指定书籍和所有书籍。"
+            leon:isShowUnderLine="true"
+            leon:rightStyle="iconCheck"/>
+
+        <com.kunfei.bookshelf.widget.settingview.LSettingItem
+            android:id="@+id/item_open_book_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/leonCheckBox"
+            android:background="@color/background"
+            leon:LtextColor="@color/tv_text_default"
+            leon:leftText="开启书单功能"
+            leon:introText="计划功能，暂时未实现。可以支持github上找书单和优书网。"
+            leon:isShowUnderLine="true"
+            leon:rightStyle="iconCheck"/>
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
+

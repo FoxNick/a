@@ -23,6 +23,7 @@ import com.kunfei.bookshelf.constant.RxBusTag;
 import com.kunfei.bookshelf.help.DocumentHelper;
 import com.kunfei.bookshelf.model.BookSourceManager;
 import com.kunfei.bookshelf.presenter.contract.BookSourceContract;
+import com.kunfei.bookshelf.service.CheckSourceService;
 
 import java.io.File;
 import java.util.List;
@@ -185,6 +186,11 @@ public class BookSourcePresenter extends BasePresenterImpl<BookSourceContract.Vi
         };
     }
 
+
+    @Override
+    public void checkBookSource(List<BookSourceBean> sourceBeans) {
+        CheckSourceService.start(mView.getContext(), sourceBeans);
+    }
 
 
     /////////////////////////////////////////////////

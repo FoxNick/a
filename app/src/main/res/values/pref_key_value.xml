@@ -15,8 +15,6 @@
     <string name="icon_main">ic_launcher_round</string>
     <string name="icon_book">book_launcher_round</string>
 
-    <string name="pv_user_agent">Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.2357.134 Safari/537.36</string>
-
     <string name="source_rule_url">https://gedoor.github.io/MyBookshelf/sourcerule.html</string>
     <string name="latest_release_api">https://api.github.com/repos/804463258/a/releases/latest</string>
 
@@ -26,5 +24,7 @@
     <string name="pk_navigationBarColorChange">navigationBarColorChange</string>
     <string name="pk_logo_path">logoPath</string>
     <string name="pk_logo_title">logoTitle</string>
+    <string name="pk_logo_title_api">logoTitleAPI</string>
     <string name="pk_logo_title_align">logoTitleAlign</string>
+    <string name="pk_logo_title_use_network">useLocal</string>
 </resources>

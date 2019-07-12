@@ -35,6 +35,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -248,6 +249,55 @@ public class MyMainActivity extends BaseTabActivity<MyMainContract.Presenter> im
         //setFloatingSearchViewNightTheme(isNightTheme());
 
         updateUI();
+
+
+
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+
+            }
+
+
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+
+                    //部分可见就会进入
+                    //updateData();
+                    //网络格言判断
+                    Boolean use_network = preferences.getBoolean(getResources().getString(R.string.pk_logo_title_use_network),true);
+
+                    if(use_network && isNetWorkAvailable()){
+
+                        String url = preferences.getString(getResources().getString(R.string.pk_logo_title_api), "");
+
+                        mPresenter.getRemoteTitle(url);
+                    }else{
+                        String logo_title = preferences.getString(getResources().getString(R.string.pk_logo_title), "");
+
+                        TextView logoTitle = navigationView.getHeaderView(0).findViewById(R.id.logo_title);
+
+                        if(!TextUtils.isEmpty(logo_title)) {
+                            logoTitle.setText(logo_title);
+                        }else{
+                            logoTitle.setText(R.string.read_summary);
+                        }
+                    }
+                }
+
+
+
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+            }
+        });
     }
 
 
@@ -635,6 +685,7 @@ public class MyMainActivity extends BaseTabActivity<MyMainContract.Presenter> im
         swNightTheme.setChecked(isNightTheme());
         swNightTheme.setOnCheckedChangeListener((compoundButton, b) -> {
             if (compoundButton.isPressed()) {
+
                 setNightTheme(b);
                 MApplication.getInstance().setChangeTheme(true);
                 setFloatingSearchViewNightTheme(b);
@@ -665,7 +716,9 @@ public class MyMainActivity extends BaseTabActivity<MyMainContract.Presenter> im
                 case R.id.action_restore: //todo
                     handler.postDelayed(this::restore, 200);
                     break;
-
+                case R.id.action_lab:
+                    handler.postDelayed(() -> LabActivity.startThis(this),200);
+                    break;
 
             }
             return true;
@@ -1098,6 +1151,15 @@ public class MyMainActivity extends BaseTabActivity<MyMainContract.Presenter> im
     }
 
     @Override
+    public void updateUITitle(String logo_title){
+
+        TextView logoTitle = navigationView.getHeaderView(0).findViewById(R.id.logo_title);
+
+        logoTitle.setText(logo_title);
+
+
+    }
+    @Override
     public void updateUI(){
 
         String logo_path = preferences.getString(getResources().getString(R.string.pk_logo_path), "");
@@ -1139,6 +1201,21 @@ public class MyMainActivity extends BaseTabActivity<MyMainContract.Presenter> im
         }else{
             logoTitle.setText(R.string.read_summary);
         }
+
+
+        //此处判断容易卡
+
+        //网络格言判断
+        /*
+        Boolean use_network = preferences.getBoolean(getResources().getString(R.string.pk_logo_title_use_network),true);
+
+        if(use_network && isNetWorkAvailable()){
+
+            String url = preferences.getString(getResources().getString(R.string.pk_logo_title_api), "");
+
+            mPresenter.getRemoteTitle(url);
+        }
+        */
 
         switch (logo_title_align) {
             case "0":

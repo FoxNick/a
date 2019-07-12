@@ -55,7 +55,11 @@ public class MyTTSBottomMenu extends FrameLayout {
     ImageView ivNext;
 
     @BindView(R.id.tts_filter)
-    TextView tvFilter;
+    ImageView tvFilter;
+
+    @BindView(R.id.tts_timer)
+    ImageView tvTimer;
+    
 
     @BindView(R.id.tts_play)
     ImageView ivPlay;
@@ -97,8 +101,8 @@ public class MyTTSBottomMenu extends FrameLayout {
         sbTTSPitch.setProgress(readBookControl.getSpeechPitch());
         sbTTSPitch.setSecondaryProgress(1);
 
-        sbTTSSpeed.setMax(15);
-        sbTTSSpeed.setProgress(readBookControl.getSpeechRate());
+        sbTTSSpeed.setMax(20);
+        sbTTSSpeed.setProgress(readBookControl.getSpeechRate() - 5);
         sbTTSSpeed.setSecondaryProgress(1);
     }
 
@@ -170,7 +174,7 @@ public class MyTTSBottomMenu extends FrameLayout {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
-                readBookControl.setSpeechRate(seekBar.getProgress());
+                readBookControl.setSpeechRate(seekBar.getProgress() + 5);
                 if (callback != null) {
                     callback.changeSpeechRate(readBookControl.getSpeechRate());
                 }
@@ -209,7 +213,11 @@ public class MyTTSBottomMenu extends FrameLayout {
         //停止
         ivStop.setOnClickListener(view -> callback.stopTTS());
 
+        //字符过滤
         tvFilter.setOnClickListener(view -> callback.setFilter());
+
+        //朗读定时
+        tvTimer.setOnClickListener(view -> callback.setTimer());
 
     }
 
@@ -250,6 +258,8 @@ public class MyTTSBottomMenu extends FrameLayout {
         void stopTTS();//停止
 
         void setFilter();//设置字符过滤
+
+        void setTimer();//设置朗读定时
 
         void onMediaButton();//播放，暂停共用按钮
 

@@ -115,9 +115,9 @@ public class SettingNestedFragment extends PreferenceFragment implements SharedP
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-      if (key.equals(getString(R.string.pk_logo_title)) || key.equals(getString(R.string.pk_logo_title_align)) ) {
+     // if (key.equals(getString(R.string.pk_logo_title)) || key.equals(getString(R.string.pk_logo_title_align)) ) {
             RxBus.get().post(RxBusTag.UPDATE_UI, true);
-        }
+       // }
     }
 
     private void checkPreferenceResource() {
@@ -204,7 +204,7 @@ public class SettingNestedFragment extends PreferenceFragment implements SharedP
                     final Preference logoPathPreference = findPreference(getString(R.string.pk_logo_path));
                     logoPathPreference.setSummary(logoPath);
 
-                    RxBus.get().post(RxBusTag.UPDATE_UI, true);
+                    //RxBus.get().post(RxBusTag.UPDATE_UI, true);
 
 
                 }

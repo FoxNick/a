@@ -124,6 +124,11 @@
         <item name="colorControlActivated">@color/gray</item>
     </style>
 
+    <style name="leonCheckBox" parent="AppTheme">
+        <item name="colorControlNormal">#CCCCCC</item>
+        <item name="colorControlActivated">#0099CC</item>
+    </style>
+
 
     <style name="AppTheme.CardView.Image" parent="CardView.Light">
         <item name="cardBackgroundColor">@color/colorCardBackground</item>

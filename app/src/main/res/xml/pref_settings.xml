@@ -8,12 +8,21 @@
         android:widgetLayout="@layout/layout_preference"/>
 
     <Preference
+        android:key="@string/pk_left_menu_header"
+        android:persistent="false"
+        android:title="@string/pref_ui"
+        android:widgetLayout="@layout/layout_preference"/>
+
+    <Preference
         android:enabled="true"
         android:key="PERF_LAST_UPDATE_CHECK"
         android:persistent="false"
         android:selectable="true"
         android:summary=""
         android:title="@string/pref_title_check_update"/>
+
+
+
 
     <SwitchPreference
         android:defaultValue="true"
@@ -92,11 +101,6 @@
         android:title="@string/up_change_source_last_chapter_t" />
 
 
-    <Preference
-        android:key="@string/pk_left_menu_header"
-        android:persistent="false"
-        android:title="@string/pref_ui"
-        android:widgetLayout="@layout/layout_preference"/>
 
 
 </PreferenceScreen>

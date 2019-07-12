@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -14,6 +15,7 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.kunfei.bookshelf.R;
@@ -32,6 +34,7 @@ import com.kunfei.bookshelf.widget.my_page.animation.PageAnimation;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Single;
@@ -39,6 +42,9 @@ import io.reactivex.SingleObserver;
 import io.reactivex.SingleOnSubscribe;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+
+import static com.kunfei.bookshelf.widget.my_page.TxtChapter.Status.FINISH;
+import static com.kunfei.bookshelf.widget.my_page.TxtChapter.Status.LOADING;
 
 /**
  * 页面加载器
@@ -152,6 +158,7 @@ public abstract class PageLoader {
     //进度显示方式
     private int progressDisplay;
 
+    private int drawContentNum = 14;
 
     /*****************************init params*******************************/
     PageLoader(PageView pageView, BookShelfBean book, Callback callback) {
@@ -171,6 +178,7 @@ public abstract class PageLoader {
         // 初始化画笔
         initPaint();
     }
+
 
     private void initData() {
         // 获取配置参数
@@ -426,6 +434,7 @@ public abstract class PageLoader {
      * 跳转到指定章节页
      */
     public void skipToChapter(int chapterPos, int pagePos) {
+
         // 设置参数
         mCurChapterPos = chapterPos;
         mCurPagePos = pagePos;
@@ -516,7 +525,7 @@ public abstract class PageLoader {
      * 获取当前页的状态
      */
     public TxtChapter.Status getPageStatus() {
-        return curChapter().txtChapter != null ? curChapter().txtChapter.getStatus() : TxtChapter.Status.LOADING;
+        return curChapter().txtChapter != null ? curChapter().txtChapter.getStatus() : LOADING;
     }
 
     /**
@@ -680,10 +689,12 @@ public abstract class PageLoader {
             return;
         }
 
-        if (curChapter().txtChapter == null) {
+        if (curChapter().txtChapter == null) {//第一次加载没有缓存的情况
             curChapter().txtChapter = new TxtChapter(mCurChapterPos);
             reSetPage();
-        } else if (curChapter().txtChapter.getStatus() == TxtChapter.Status.FINISH) {
+            Log.d("ceshi-openChapter","curChapter().txtChapter == null");
+        } else if (curChapter().txtChapter.getStatus() == TxtChapter.Status.FINISH) {//文本内容加载完成
+            Log.d("ceshi-openChapter","curChapter().txtChapter.getStatus() == TxtChapter.Status.FINISH");
             reSetPage();
             mPageView.invalidate();
             pagingEnd(PageAnimation.Direction.NONE);
@@ -692,7 +703,8 @@ public abstract class PageLoader {
 
         // 如果章节目录没有准备好
         if (!isChapterListPrepare) {
-            curChapter().txtChapter.setStatus(TxtChapter.Status.LOADING);
+            Log.d("ceshi-openChapter","如果章节目录没有准备好");
+            curChapter().txtChapter.setStatus(LOADING);
             reSetPage();
             mPageView.invalidate();
             return;
@@ -708,6 +720,7 @@ public abstract class PageLoader {
 
         parseCurChapter();
         resetPageOffset();
+
     }
 
     /**
@@ -831,9 +844,18 @@ public abstract class PageLoader {
                 }
             }
         }
-        if (bitmap != null)
+        if (bitmap != null) {
+
             drawBackground(bitmap, txtChapter, txtPage);
+        }
+        //Log.d("ceshi","drawContent");
         drawContent(bitmap, txtChapter, txtPage);
+        //drawContentNum--;
+        //if(drawContentNum==0){
+        //    callback.finishLoading();
+        //    drawContentNum = 14;
+        //}
+
     }
 
     /**
@@ -905,7 +927,7 @@ public abstract class PageLoader {
                     canvas.drawText(title, tipMarginLeft, tipBottomBot, mTipPaint);
 
                     //如果是第一页,则左上角显示书名
-                    if(txtPage.getPosition()==0){
+                    if(txtPage!=null && txtPage.getPosition()==0){
                         String bookTitle = book.getBookInfoBean().getName();
                         canvas.drawText(bookTitle, tipMarginLeft, tipBottomTop + mPageView.getStatusBarHeight(), mTipPaint);
                     }
@@ -929,7 +951,7 @@ public abstract class PageLoader {
                     title = TextUtils.ellipsize(title, mTipPaint, titleTipLength, TextUtils.TruncateAt.END).toString();
 
                     //如果是第一页,则左上角显示书名
-                    if(txtPage.getPosition()==0){
+                    if(txtPage!=null && txtPage.getPosition()==0){
                         title = book.getBookInfoBean().getName();
                     }
                     canvas.drawText(title, tipMarginLeft, tipBottomTop, mTipPaint);
@@ -1006,6 +1028,8 @@ public abstract class PageLoader {
      * 绘制内容
      */
     private synchronized void drawContent(Bitmap bitmap, TxtChapter txtChapter, TxtPage txtPage) {
+
+
         if (bitmap == null) return;
         Canvas canvas = new Canvas(bitmap);
         if (mPageMode == PageAnimation.Mode.SCROLL) {
@@ -1020,8 +1044,17 @@ public abstract class PageLoader {
         if (txtChapter.getStatus() != TxtChapter.Status.FINISH) {
             //绘制字体
             String tip = getStatusText(txtChapter);
-            drawErrorMsg(canvas, tip, 0);
+
+            int offsetO = 0;
+
+            if(txtChapter.getStatus() == LOADING) {
+                //offsetO  = 50;
+            }
+
+            drawErrorMsg(canvas, tip, offsetO);
+
         } else {
+
             float top = contentMarginHeight - fontMetrics.ascent;
             if (mPageMode != PageAnimation.Mode.SCROLL) {
                 top += readBookControl.getHideStatusBar() ? mMarginTop : mPageView.getStatusBarHeight() + mMarginTop;
@@ -1032,6 +1065,8 @@ public abstract class PageLoader {
             int strLength = 0;
             boolean isLight;
             int ppp = 0;//pzl,文字位置
+
+
 
 
 
@@ -1172,6 +1207,7 @@ public abstract class PageLoader {
                     top += textInterval;
                 }
             }
+
         }
     }
 
@@ -1545,6 +1581,90 @@ public abstract class PageLoader {
             linesData.add(msg.substring(tempLayout.getLineStart(i), tempLayout.getLineEnd(i)));
         }
         float pivotY = (mDisplayHeight - textInterval * linesData.size()) / 3f - offset;
+
+
+        for (String str : linesData) {
+            float textWidth = mTextPaint.measureText(str);
+            float pivotX = (mDisplayWidth - textWidth) / 2;
+            if (readBookControl.getLoadingAmin() && msg.equals(mContext.getString(R.string.loading))) {
+                //加载中替换为动画
+            }else{
+                canvas.drawText(str, pivotX, pivotY, mTextPaint);
+            }
+
+            pivotY += textInterval;
+
+        }
+
+        //加载中特殊绘制
+        if(msg.equals(mContext.getString(R.string.loading))){
+            /*
+            mTextPaint.setTextSize(40);
+            // 先绘制背景色文字
+            mTextPaint.setColor(Color.parseColor("#808080"));
+            //绘制 文字
+            Rect rect = new Rect(0, 0, mDisplayWidth, mDisplayHeight);
+            mTextPaint.setTextAlign(Paint.Align.CENTER);
+            Paint.FontMetrics metrics = mTextPaint.getFontMetrics();
+            float top = metrics.top;
+            float bottom = metrics.bottom;
+            int centerY = (int) (rect.centerY() - top / 2 - bottom / 2);
+            canvas.drawText("搜神", rect.centerX(), centerY, mTextPaint);
+
+            Log.d("ss","ddd");
+
+            // 生成闭合波浪路径
+           Path mPath = getActionPath(50);
+
+            // 将Canvas按照Path的规则进行裁剪
+
+            Paint mPaint = new Paint();
+            mPaint.setAntiAlias(true);
+            mPaint.setStyle(Paint.Style.FILL);
+            mPaint.setColor(Color.parseColor("#000000"));
+
+            canvas.clipPath(mPath);
+            canvas.drawCircle(mDisplayWidth / 2, mDisplayHeight / 2, mDisplayWidth / 2, mPaint);
+            mTextPaint.setColor(Color.WHITE);
+            canvas.drawText("搜神", rect.centerX(), centerY, mTextPaint);
+
+            */
+        }
+
+
+    }
+
+
+    private Path getActionPath(float curPercent) {
+        final Path path = new Path();
+        int x = -mDisplayWidth;
+        x += curPercent * mDisplayWidth;
+        path.moveTo(x, mDisplayHeight / 2);
+        // 计算控制点
+        int quadWidth = mDisplayWidth / 4;
+        int quadHeight = mDisplayHeight / 20 * 3;
+        // 第一个周期
+        path.rQuadTo(quadWidth, quadHeight, quadWidth * 2, 0);
+        path.rQuadTo(quadWidth, -quadHeight, quadWidth * 2, 0);
+        // 第二个周期
+        path.rQuadTo(quadWidth, quadHeight, quadWidth * 2, 0);
+        path.rQuadTo(quadWidth, -quadHeight, quadWidth * 2, 0);
+
+        // 右侧的直线
+        path.lineTo(x + mDisplayWidth * 2, mDisplayHeight);
+        path.lineTo(x, mDisplayHeight);
+        path.close();
+        return path;
+    }
+
+
+    private void drawLoadingMsg(Canvas canvas, String msg, float offset) {
+        Layout tempLayout = new StaticLayout(msg, mTextPaint, mVisibleWidth, Layout.Alignment.ALIGN_NORMAL, 0, 0, false);
+        List<String> linesData = new ArrayList<>();
+        for (int i = 0; i < tempLayout.getLineCount(); i++) {
+            linesData.add(msg.substring(tempLayout.getLineStart(i), tempLayout.getLineEnd(i)));
+        }
+        float pivotY = (mDisplayHeight - textInterval * linesData.size()) / 2f - offset;
         for (String str : linesData) {
             float textWidth = mTextPaint.measureText(str);
             float pivotX = (mDisplayWidth - textWidth) / 2;
@@ -1615,6 +1735,9 @@ public abstract class PageLoader {
      * 解析当前页数据
      */
     void parseCurChapter() {
+
+        Log.d("ceshi","PageLoader:parseCurChapter");
+
         if (curChapter().txtChapter.getStatus() != TxtChapter.Status.FINISH) {
             Single.create((SingleOnSubscribe<TxtChapter>) e -> {
                 ChapterProvider chapterProvider = new ChapterProvider(this);
@@ -1630,6 +1753,7 @@ public abstract class PageLoader {
 
                         @Override
                         public void onSuccess(TxtChapter txtChapter) {
+                            Log.d("ceshi","PageLoader解析当前页数据parseCurChapter");
                             upTextChapter(txtChapter);
                         }
 
@@ -1675,6 +1799,8 @@ public abstract class PageLoader {
 
                     @Override
                     public void onSuccess(TxtChapter txtChapter) {
+                        Log.d("ceshi","PageLoader解析上一章数据parsePrevChapter");
+
                         upTextChapter(txtChapter);
                     }
 
@@ -1693,6 +1819,8 @@ public abstract class PageLoader {
      * 解析下一章数据
      */
     void parseNextChapter() {
+        //Log.d("ceshi","PageLoader解析下一章数据parseNextChapter");
+
         final int nextChapterPos = mCurChapterPos + 1;
         if (nextChapterPos >= callback.getChapterList().size()) {
             nextChapter().txtChapter = null;
@@ -1717,6 +1845,7 @@ public abstract class PageLoader {
 
                     @Override
                     public void onSuccess(TxtChapter txtChapter) {
+                        Log.d("ceshi","PageLoader解析下一章数据parseNextChapter");
                         upTextChapter(txtChapter);
                     }
 
@@ -1731,7 +1860,13 @@ public abstract class PageLoader {
                 });
     }
 
+
+    List aa = new ArrayList();
     private void upTextChapter(TxtChapter txtChapter) {
+
+        Log.d("ceshi:upTextChapter","mCurChapterPos:"+mCurChapterPos+":"+txtChapter.getStatus());
+        Log.d("ceshi:upTextChapter","getPosition:"+txtChapter.getPosition()+":"+txtChapter.getStatus());
+
         if (txtChapter.getPosition() == mCurChapterPos - 1) {
             prevChapter().txtChapter = txtChapter;
             if (mPageMode == PageAnimation.Mode.SCROLL) {
@@ -1739,6 +1874,8 @@ public abstract class PageLoader {
             } else {
                 mPageView.drawPage(-1);
             }
+
+
         } else if (txtChapter.getPosition() == mCurChapterPos) {
             curChapter().txtChapter = txtChapter;
             reSetPage();
@@ -1752,6 +1889,22 @@ public abstract class PageLoader {
                 mPageView.drawPage(1);
             }
         }
+
+
+        if(txtChapter.getStatus()==FINISH){
+            aa.add(txtChapter.getPosition());
+        }
+
+        if(aa.size()==3){
+
+            if(readBookControl.getLoadingAmin()) {
+                callback.finishLoading();
+            }
+            aa = new ArrayList();
+        }
+
+
+        Log.d("ceshi:upTextChapter","out");
     }
 
     private void drawScaledText(Canvas canvas, String line, float lineWidth, TextPaint paint, float top,int y,List<TxtLine> txtLists) {
@@ -1884,6 +2037,16 @@ public abstract class PageLoader {
          * @param pos:切换章节的序号
          */
         void onChapterChange(int pos);
+
+        /**
+         * 通知页面显示正在加载中。。。。
+         */
+        void inLoading(String title);
+
+        /**
+         * 完成加载
+         */
+        void finishLoading();
 
         /**
          * 作用：章节目录加载完成时候回调

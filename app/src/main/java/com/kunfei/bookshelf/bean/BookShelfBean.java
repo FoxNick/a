@@ -121,6 +121,15 @@ public class BookShelfBean implements Cloneable, BaseBookBean {
         return variableMap;
     }
 
+    public int getDurChapter(int chapterListSize) {
+        if (durChapter < 0 | chapterListSize == 0) {
+            return 0;
+        } else if (durChapter >= chapterListSize) {
+            return chapterListSize - 1;
+        }
+        return durChapter;
+    }
+
     @Override
     public String getNoteUrl() {
         return noteUrl;
@@ -155,6 +164,8 @@ public class BookShelfBean implements Cloneable, BaseBookBean {
     public BookInfoBean getBookInfoBean() {
         if (bookInfoBean == null) {
             bookInfoBean = new BookInfoBean();
+            bookInfoBean.setNoteUrl(noteUrl);
+            bookInfoBean.setTag(tag);
         }
         return bookInfoBean;
     }

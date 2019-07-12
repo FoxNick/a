@@ -197,4 +197,28 @@
         app:cantouch="false"
         app:fontdrawable="?attr/colorAccent" />
 
+
+    <RelativeLayout android:id="@+id/loadingLayout"
+        android:visibility="invisible"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <ProgressBar android:id="@+id/loadingBar"
+            android:layout_width="128.0dip"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_above="@id/loadingTitle"
+            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            style="?android:progressBarStyleHorizontal" />
+        <TextView android:textSize="15.0sp"
+            android:gravity="center"
+            android:id="@+id/loadingTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:includeFontPadding="false"
+            android:layout_centerInParent="true"
+            android:lineSpacingMultiplier="1.5" />
+    </RelativeLayout>
+
 </FrameLayout>

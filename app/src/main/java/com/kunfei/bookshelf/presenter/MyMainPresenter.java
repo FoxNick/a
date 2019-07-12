@@ -13,6 +13,7 @@ import com.kunfei.basemvplib.BasePresenterImpl;
 import com.kunfei.basemvplib.impl.IView;
 import com.kunfei.bookshelf.DbHelper;
 import com.kunfei.bookshelf.R;
+import com.kunfei.bookshelf.base.BaseModelImpl;
 import com.kunfei.bookshelf.base.observer.MyObserver;
 import com.kunfei.bookshelf.bean.BookChapterBean;
 import com.kunfei.bookshelf.bean.BookInfoBean;
@@ -26,17 +27,21 @@ import com.kunfei.bookshelf.help.BookshelfHelp;
 import com.kunfei.bookshelf.help.DataBackup;
 import com.kunfei.bookshelf.help.DataRestore;
 import com.kunfei.bookshelf.model.WebBookModel;
+import com.kunfei.bookshelf.model.analyzeRule.AnalyzeUrl;
 import com.kunfei.bookshelf.presenter.contract.MainContract;
 import com.kunfei.bookshelf.presenter.contract.MyMainContract;
+import com.kunfei.bookshelf.utils.GsonUtils;
 import com.kunfei.bookshelf.utils.RxUtils;
 import com.kunfei.bookshelf.utils.StringUtils;
 
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Response;
 
 public class MyMainPresenter extends BasePresenterImpl<MyMainContract.View> implements MyMainContract.Presenter {
 
@@ -364,4 +369,48 @@ public class MyMainPresenter extends BasePresenterImpl<MyMainContract.View> impl
                 });
     }
 
+
+    @Override
+    public void getRemoteTitle(String Url) {
+
+        String content  = "";
+        Observable.create((ObservableOnSubscribe<String>) e -> {
+
+            String a = "";
+
+            String body;
+            AnalyzeUrl analyzeUrl = new AnalyzeUrl(Url ,null, "");
+
+            Response<String> response = BaseModelImpl.getInstance().getResponseO(analyzeUrl).blockingFirst();
+            body = response.body();
+
+            //解析返回结果
+            if(body.contains("{")){
+
+               Map aa =  GsonUtils.parseJObject(body, Map.class);
+               if(aa.containsKey("hitokoto")) {
+                   a = aa.get("hitokoto").toString();
+               }
+
+            }else{
+                a = body;
+            }
+
+            e.onNext(a);
+        }).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new MyObserver<String>() {
+                    @Override
+                    public void onNext(String value) {
+                        if (!StringUtils.isTrimEmpty(value)) {
+                            mView.updateUITitle(value);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //e.printStackTrace();
+                    }
+                });
+    }
 }

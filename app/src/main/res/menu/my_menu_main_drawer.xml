@@ -54,4 +54,13 @@
             app:tint="@color/tv_text_default" />
     </group>
 
+
+    <group android:id="@+id/drawer_menu_lab">
+        <item
+            android:id="@+id/action_lab"
+            android:icon="@drawable/ic__lab"
+            android:title="@string/lab"
+            app:tint="@color/tv_text_default" />
+
+    </group>
 </menu>

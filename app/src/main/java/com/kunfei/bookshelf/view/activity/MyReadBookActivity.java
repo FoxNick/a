@@ -25,6 +25,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -153,6 +154,14 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
     ImageView cursorLeft;
     @BindView(R.id.cursor_right)
     ImageView cursorRight;
+
+    @BindView(R.id.loadingLayout)
+    RelativeLayout loadingLayout;
+
+    @BindView(R.id.loadingTitle)
+    TextView loadingTitle;
+
+
 
     private Animation menuTopIn;
     private Animation menuTopOut;
@@ -377,6 +386,7 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
             progressBarNextPage.setVisibility(View.INVISIBLE);
         }
         readBottomMenu.setAutoPage(autoPage);
+
     }
 
     /**
@@ -773,6 +783,12 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
                 showWordFilter();
             }
 
+            @Override
+            public void setTimer() {
+
+                showTimerSetting();
+            }
+
 
             @Override
             public void readPrePage() {
@@ -827,6 +843,22 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
         TwoInputDialog.builder(this.getContext()).setTitle("设置朗读字符过滤").setCallback(callback).show();
 
     }
+
+    private  void showTimerSetting(){
+
+        InputDialog.builder(this.getContext())
+                        .setTitle("设置朗读时间")
+                        .setCallback(inputText -> {
+                            inputText = StringUtils.trim(inputText);
+                            if(StringUtils.isNumeric(inputText)){//数字则往下执行，否则没反应
+                                ReadAloudService.setTimer(getContext(), Integer.parseInt(inputText));
+                            }
+
+                            
+                        }).show();
+
+    }
+
 
     /**
      * 初始化其它设置
@@ -969,15 +1001,28 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
      */
     @Override
     public void startLoadingBook() {
+        if(readBookControl.getLoadingAmin()) {
+            loadingTitle.setText(mPresenter.getBookShelf().getDurChapterName());
+        }
         initPageView();
-        mediaPlayerPop.setCover(mPresenter.getBookShelf().getCustomCoverPath() != null ? mPresenter.getBookShelf().getCustomCoverPath()
-                : mPresenter.getBookShelf().getBookInfoBean().getCoverUrl());
+
+        //mediaPlayerPop.setCover(mPresenter.getBookShelf().getCustomCoverPath() != null ? mPresenter.getBookShelf().getCustomCoverPath()
+        //        : mPresenter.getBookShelf().getBookInfoBean().getCoverUrl());
+    }
+
+
+    @Override
+    public void showLoading(String title){
+        if(readBookControl.getLoadingAmin()) {
+            loadingLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
      * 加载阅读页面
      */
     private void initPageView() {
+
         mPageLoader = pageView.getPageLoader(this, mPresenter.getBookShelf(),
                 new PageLoader.Callback() {
                     @Override
@@ -985,13 +1030,27 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
                         return mPresenter.getChapterList();
                     }
 
+                    @Override
+                    public void inLoading(String title) {
+
+                       loadingLayout.setVisibility(View.VISIBLE);
+                       loadingTitle.setText(title);
+                    }
+
+                    @Override
+                    public void finishLoading() {
+
+                        loadingLayout.setVisibility(View.INVISIBLE);
+                    }
+
+
                     /**
                      * @param pos:切换章节的序号
                      */
                     @Override
                     public void onChapterChange(int pos) {
                         if (mPresenter.getChapterList().isEmpty()) return;
-                        if (mPresenter.getChapterList().size() - 1 < pos) return;
+                        if (pos >= mPresenter.getChapterList().size()) return;
                         mPresenter.getBookShelf().setDurChapterName(mPresenter.getChapterList().get(pos).getDurChapterName());
                         actionBar.setTitle(mPresenter.getBookShelf().getBookInfoBean().getName());
                         if (mPresenter.getBookShelf().getChapterListSize() > 0) {
@@ -1022,6 +1081,7 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
                                 readBottomMenu.setTvNext(true);
                             }
                         }
+
                     }
 
                     /**
@@ -1057,13 +1117,15 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
                      */
                     @Override
                     public void onPageChange(int chapterIndex, int pageIndex, boolean resetReadAloud) {
+
                         mPresenter.getBookShelf().setDurChapter(chapterIndex);
                         mPresenter.getBookShelf().setDurChapterPage(pageIndex);
                         mPresenter.saveProgress();
                         readBottomMenu.getReadProgress().post(
                                 () -> readBottomMenu.getReadProgress().setDurProgress(pageIndex)
                         );
-                        Long end = mPresenter.getChapterList().get(mPresenter.getBookShelf().getDurChapter()).getEnd();
+                        //Long end = mPresenter.getChapterList().get(mPresenter.getBookShelf().getDurChapter()).getEnd();
+                        Long end = mPresenter.getChapterList().get(mPresenter.getBookShelf().getDurChapter(mPresenter.getChapterList().size())).getEnd();
                         int audioSize = end != null ? end.intValue() : 0;
                         mediaPlayerPop.upAudioSize(audioSize);
                         mediaPlayerPop.upAudioDur(mPresenter.getBookShelf().getDurChapterPage());
@@ -1363,6 +1425,9 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
      * 刷新当前章节
      */
     private void refreshDurChapter() {
+        if(readBookControl.getLoadingAmin()) {
+            loadingLayout.setVisibility(View.VISIBLE);
+        }
         if (!NetworkUtils.isNetWorkAvailable()) {
             toast("网络不可用，无法刷新当前章节!");
             return;
@@ -1415,8 +1480,12 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
 
     @Override
     public void skipToChapter(int chapterIndex, int pageIndex) {
+        if(readBookControl.getLoadingAmin()) {
+            loadingLayout.setVisibility(View.VISIBLE);
+        }
+
         if (mPageLoader != null) {
-            mPageLoader.skipToChapter(chapterIndex, pageIndex);
+           mPageLoader.skipToChapter(chapterIndex, pageIndex);
         }
     }
 

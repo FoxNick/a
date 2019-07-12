@@ -55,6 +55,9 @@ public interface ReadBookContract {
         void upAudioSize(int audioSize);
 
         void upAudioDur(int audioDur);
+
+
+        void showLoading(String title);
     }
 
     interface Presenter extends IPresenter {

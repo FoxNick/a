@@ -62,6 +62,7 @@ public class ReadBookPresenter extends BasePresenterImpl<ReadBookContract.View> 
 
     @Override
     public void initData(Activity activity) {
+        mView.showLoading("");
         Intent intent = activity.getIntent();
         int open_from = intent.getData() != null ? OPEN_FROM_OTHER : OPEN_FROM_APP;
         open_from = intent.getIntExtra("openFrom", open_from);
@@ -230,6 +231,8 @@ public class ReadBookPresenter extends BasePresenterImpl<ReadBookContract.View> 
      */
     @Override
     public void changeBookSource(SearchBookBean searchBook) {
+        searchBook.setName(bookShelf.getBookInfoBean().getName());
+        searchBook.setAuthor(bookShelf.getBookInfoBean().getAuthor());
         ChangeSourceHelp.changeBookSource(searchBook, bookShelf)
                 .subscribe(new MyObserver<TwoDataBean<BookShelfBean, List<BookChapterBean>>>() {
                     @Override
@@ -243,7 +246,8 @@ public class ReadBookPresenter extends BasePresenterImpl<ReadBookContract.View> 
                         try {
                             long currentTime = System.currentTimeMillis();
                             String bookName = bookShelf.getBookInfoBean().getName();
-                            BookSourceBean bookSourceBean = BookSourceManager.getBookSourceByUrl(tag);
+                            bookSourceBean = BookSourceManager.getBookSourceByUrl(tag);
+
                             if (SavedSource.Instance.getBookSource() != null
                                     && currentTime - SavedSource.Instance.getSaveTime() < 60000
                                     && SavedSource.Instance.getBookName().equals(bookName))

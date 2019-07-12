@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -152,6 +153,7 @@ public class BookSourceActivity extends MBaseActivity<BookSourceContract.Present
 
     private void initRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
         adapter = new BookSourceAdapter(this);
         recyclerView.setAdapter(adapter);
         itemTouchCallback = new ItemTouchCallback();
@@ -292,9 +294,9 @@ public class BookSourceActivity extends MBaseActivity<BookSourceContract.Present
                 deleteDialog();
                 break;
 
-            //case R.id.action_check_book_source:
-            //    mPresenter.checkBookSource(adaptImageViewer.getSelectDataList());
-            //    break;
+            case R.id.action_check_book_source:
+                mPresenter.checkBookSource(adapter.getSelectDataList());
+                break;
             case R.id.sort_manual:
                 upSourceSort(0);
                 break;

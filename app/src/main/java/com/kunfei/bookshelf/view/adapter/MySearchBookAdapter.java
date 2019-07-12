@@ -115,7 +115,9 @@ public class MySearchBookAdapter extends RecyclerView.Adapter {
             strSrc.append(" " + searchBooks.get(position).getHitList().get(i).getBookSourceName());
         }
 
-        ((Viewholder) holder).sources.setText("书源(" + searchBooks.get(position).getHitList().size() + "):" + strSrc.substring(1));
+        if(strSrc.length()>0) {
+            ((Viewholder) holder).sources.setText("书源(" + searchBooks.get(position).getHitList().size() + "):" + strSrc.substring(1));
+        }
 
         /*
         int originNum =  searchBooks.get(position).getOriginNum();

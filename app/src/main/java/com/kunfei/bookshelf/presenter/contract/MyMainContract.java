@@ -41,6 +41,8 @@ public interface MyMainContract {
 
         void updateUI();
 
+        void updateUITitle(String title);
+
         void authorSearch(String author);
 
         void keyWordSearch(String keyWord);
@@ -61,6 +63,8 @@ public interface MyMainContract {
         void addBookUrl(String bookUrl);
 
         void clearBookshelf();
+
+        void getRemoteTitle(String Url);
 
         void querySearchHistory(String content);
 

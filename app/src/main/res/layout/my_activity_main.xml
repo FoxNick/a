@@ -48,13 +48,10 @@
                         android:id="@+id/tab_tl_indicator"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        app:tabBackground="?attr/colorPrimary"
-                        app:tabGravity="fill"
-                        app:tabMaxWidth="0.0dip"
-                        app:tabTextColor="@color/noSelectTab"
-                        app:tabSelectedTextColor="@color/selectTab"
-                        app:tabIndicatorColor="@color/colorAccent"
-                        app:tabMode="fixed" />
+                        app:tabBackground="?attr/selectableItemBackground"
+
+
+                        />
 
                 </com.google.android.material.appbar.AppBarLayout>
 

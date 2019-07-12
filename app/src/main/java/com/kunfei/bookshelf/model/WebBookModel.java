@@ -20,6 +20,8 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 
+import static com.kunfei.bookshelf.constant.AppConstant.TIME_OUT;
+
 public class WebBookModel {
 
     public static WebBookModel getInstance() {
@@ -33,7 +35,7 @@ public class WebBookModel {
     public Observable<BookShelfBean> getBookInfo(BookShelfBean bookShelfBean) {
         return WebBook.getInstance(bookShelfBean.getTag())
                 .getBookInfo(bookShelfBean)
-                .timeout(60, TimeUnit.SECONDS);
+                .timeout(TIME_OUT, TimeUnit.SECONDS);
     }
 
     /**
@@ -44,7 +46,7 @@ public class WebBookModel {
         return WebBook.getInstance(bookShelfBean.getTag())
                 .getChapterList(bookShelfBean)
                 .flatMap((chapterList) -> upChapterList(bookShelfBean, chapterList))
-                .timeout(180, TimeUnit.SECONDS);
+                .timeout(TIME_OUT, TimeUnit.SECONDS);
     }
 
     /**
@@ -54,7 +56,7 @@ public class WebBookModel {
         return WebBook.getInstance(chapterBean.getTag())
                 .getBookContent(chapterBean, bookShelfBean)
                 .flatMap((bookContentBean -> saveContent(bookShelfBean.getBookInfoBean(), chapterBean, bookContentBean)))
-                .timeout(60, TimeUnit.SECONDS);
+                .timeout(TIME_OUT, TimeUnit.SECONDS);
     }
 
     /**
@@ -63,7 +65,7 @@ public class WebBookModel {
     public Observable<List<SearchBookBean>> searchBook(String content, int page, String tag) {
         return WebBook.getInstance(tag)
                 .searchBook(content, page)
-                .timeout(60, TimeUnit.SECONDS);
+                .timeout(TIME_OUT, TimeUnit.SECONDS);
     }
 
     /**
@@ -72,7 +74,7 @@ public class WebBookModel {
     public Observable<List<SearchBookBean>> findBook(String url, int page, String tag) {
         return WebBook.getInstance(tag)
                 .findBook(url, page)
-                .timeout(60, TimeUnit.SECONDS);
+                .timeout(TIME_OUT, TimeUnit.SECONDS);
     }
 
     /**

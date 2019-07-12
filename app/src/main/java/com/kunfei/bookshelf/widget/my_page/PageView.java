@@ -7,7 +7,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -62,7 +64,7 @@ public class PageView extends View {
     //文字选择画笔
     private Paint mTextSelectPaint = null;
     //文字选择画笔颜色
-    private int TextSelectColor = Color.parseColor("#77fadb08");//todo,其实可以做成配置项，哈哈
+    private int TextSelectColor = Color.parseColor("#77e0a078");//todo,其实可以做成配置项，哈哈
 
     private Path mSelectTextPath = new Path();
 
@@ -345,6 +347,9 @@ public class PageView extends View {
             mPageLoader.drawPage(getBgBitmap(pageOnCur), pageOnCur);
         }
         invalidate();
+
+
+
     }
 
     /**
@@ -402,6 +407,62 @@ public class PageView extends View {
         if (mCurrentMode != Mode.Normal && !isRunning() && !isMove) {
             DrawSelectText(canvas);
         }
+
+        /*
+        TextPaint mTextPaint;
+        mTextPaint = new TextPaint();
+        mTextPaint.setTextSize(40);
+        // 先绘制背景色文字
+        mTextPaint.setColor(Color.BLUE);
+        //绘制 文字
+        Rect rect = new Rect(0, 0, mViewWidth, mViewHeight);
+        mTextPaint.setTextAlign(Paint.Align.CENTER);
+        Paint.FontMetrics metrics = mTextPaint.getFontMetrics();
+        float top = metrics.top;
+        float bottom = metrics.bottom;
+        int centerY = (int) (rect.centerY() - top / 2 - bottom / 2);
+        canvas.drawText("搜神", rect.centerX(), centerY, mTextPaint);
+
+        Log.d("ss","ddd");
+
+        // 生成闭合波浪路径
+        Path mPath = getActionPath(50);
+
+        // 将Canvas按照Path的规则进行裁剪
+
+        Paint mPaint = new Paint();
+
+
+        canvas.clipPath(mPath);
+        canvas.drawCircle(mViewWidth / 2, mViewHeight / 2, mViewWidth / 2, mPaint);
+        mTextPaint.setColor(Color.WHITE);
+        canvas.drawText("搜神", rect.centerX(), centerY, mTextPaint);
+
+        */
+    }
+
+
+
+    private Path getActionPath(float curPercent) {
+        final Path path = new Path();
+        int x = -mViewWidth;
+        x += curPercent * mViewWidth;
+        path.moveTo(x, mViewHeight / 2);
+        // 计算控制点
+        int quadWidth = mViewWidth / 4;
+        int quadHeight = mViewHeight / 20 * 3;
+        // 第一个周期
+        path.rQuadTo(quadWidth, quadHeight, quadWidth * 2, 0);
+        path.rQuadTo(quadWidth, -quadHeight, quadWidth * 2, 0);
+        // 第二个周期
+        path.rQuadTo(quadWidth, quadHeight, quadWidth * 2, 0);
+        path.rQuadTo(quadWidth, -quadHeight, quadWidth * 2, 0);
+
+        // 右侧的直线
+        path.lineTo(x + mViewWidth * 2, mViewHeight);
+        path.lineTo(x, mViewHeight);
+        path.close();
+        return path;
     }
 
 
@@ -469,8 +530,8 @@ public class PageView extends View {
 
         mSelectLines.clear();
 
-        Log.e("FirstSelectTxtChar",firstSelectTxtChar.toString());
-        Log.e("LastSelectTxtChar",lastSelectTxtChar.toString());
+        //Log.e("FirstSelectTxtChar",firstSelectTxtChar.toString());
+       // Log.e("LastSelectTxtChar",lastSelectTxtChar.toString());
 
         // 找到选择的字符数据，转化为选择的行，然后将行选择背景画出来
         for (TxtLine l : mLinseData) {
@@ -484,11 +545,11 @@ public class PageView extends View {
                 if (!Started) {
                     if (c.Index == firstSelectTxtChar.Index) {
                         Started = true;
-                        Log.e("找到第一個字符",c.toString());
+                        //Log.e("找到第一個字符",c.toString());
                         selectline.CharsData.add(c);
                         if (c.Index == lastSelectTxtChar.Index) {
                             Ended = true;
-                            Log.e("找到最後一字符",c.toString());
+                            //Log.e("找到最後一字符",c.toString());
                             break;
                         }
                     }
@@ -503,12 +564,12 @@ public class PageView extends View {
                         break;
                     } else {
                         selectline.CharsData.add(c);
-                        Log.e("找到中間字符",c.toString());
+                        //Log.e("找到中間字符",c.toString());
                     }
                 }
             }
 
-            Log.e("selectline", selectline.toString() + "");
+            //Log.e("selectline", selectline.toString() + "");
             mSelectLines.add(selectline);
 
             if (Started && Ended) {
@@ -547,7 +608,7 @@ public class PageView extends View {
 
     private void DrawOaleSeletLinesBg(Canvas canvas) {// 绘制椭圆型的选中背景
         for (TxtLine l : mSelectLines) {
-            Log.e("selectline", l.getLineData() + "");
+            //Log.e("selectline", l.getLineData() + "");
 
             if (l.CharsData != null && l.CharsData.size() > 0) {
 
@@ -561,8 +622,8 @@ public class PageView extends View {
                 RectF rect = new RectF(fistchar.TopLeftPosition.x, fistchar.TopLeftPosition.y,
                         lastchar.TopRightPosition.x, lastchar.BottomRightPosition.y);
 
-                canvas.drawRoundRect(rect, fw / 2,
-                        textHeight / 2, mTextSelectPaint);
+                canvas.drawRoundRect(rect, fw / 4,
+                        textHeight / 4, mTextSelectPaint);
 
             }
         }
@@ -620,6 +681,9 @@ public class PageView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
+
+        if (mPageAnim == null) return true;
+        if (mPageLoader == null) return true;
 
 
         switch (readBookControl.getLongPressSetting()) {
@@ -705,6 +769,10 @@ public class PageView extends View {
                 }
                 break;
             case MotionEvent.ACTION_UP:
+
+                mPageAnim.initTouch(x, y);
+                mPageAnim.setTouchInitFalse();
+
                 if (!isMove) {
                     if(LONG_PRESS_TIMEOUT!=0) {
                         removeCallbacks(mLongPressRunnable);
