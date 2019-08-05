@@ -86,3 +86,15 @@ http://xxx/aaa.json
 
 https://www.json.cn/
 格式化，验证json
+
+
+入口
+https://raw.githubusercontent.com/804463258/a/master/json/index.json
+
+书单1
+
+https://raw.githubusercontent.com/804463258/a/master/json/aaa.json
+
+书单2
+https://raw.githubusercontent.com/804463258/a/master/json/bbb.json
+
