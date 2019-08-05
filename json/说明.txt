@@ -1,0 +1,88 @@
+这个才是入口，输入书单地址即可
+http://xxx/allin.json
+那些是要存入数据库呢。
+
+
+
+{
+    "title":"15年老书虫的推书",
+    "author":"wdise",
+    "bookList":[
+        {
+	    "name":"新书速递100本",
+	    "desc":"新书速递100本",
+            "url":"http://xxx/aaa.json"
+        },
+	{
+	    "name":"在看的书 ",
+	     "desc":"新书速递100本",
+            "url":"http://xxx/bbb.json"
+        },
+	 {
+	    "name":"故事精彩是第一判断标准",
+	     "desc":"新书速递100本",
+            "url":"http://xxx/aaa.json"
+        },
+	{
+	    "name":"白一点的后宫文",
+	     "desc":"新书速递100本",
+            "url":"http://xxx/aaa.json"
+        }
+        
+    ]
+}
+
+
+
+
+
+http://xxx/aaa.json
+
+
+{
+    "bookListTitle":"故事精彩是第一判断标准",
+    "bookTotal":"13",
+    "bookListAuthor":"wdise",
+    "bookList":[
+        {
+            "title":"第一本书",
+            "comment":"老作者阿斯大法  。",
+            "author":"作者",
+            "star":"5",
+            "wordCount":"5万字",
+            "chapterNum":"1200章",
+            "status":"太监"
+        },
+        {
+            "title":"第本书",
+            "comment":"老作者瞎几把写小白文系列。",
+            "author":"作者",
+            "star":"5",
+            "wordCount":"5万字",
+            "chapterNum":"1200章",
+            "status":"太监"
+        },
+        {
+            "title":"第三本书",
+            "comment":"新书，适合养肥。",
+            "author":"作者",
+            "star":"5",
+            "wordCount":"5万字",
+            "chapterNum":"1200章",
+            "status":"太监"
+        },
+        {
+            "title":"第四本书",
+            "comment":"凑数的。",
+            "author":"作者",
+            "star":"5",
+            "wordCount":"5万字",
+            "chapterNum":"1200章",
+            "status":"太监"
+        }
+    ]
+}
+
+
+https://www.json.cn/
+格式化，验证json
