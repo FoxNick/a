@@ -3,21 +3,15 @@
     "author":"wdise",
     "list":[
         {
-            "name":"新书速递100本11",
-            "author":"网友",
-            "num":"100",
+            "name":"酷安网友推荐1",
+            "author":"酷安基友",
+            "num":"57",
             "url":"http://xxx/aaa.json"
         },
         {
-            "name":"新书速递100本11",
-            "author":"网友",
-            "num":"100",
-            "url":"http://xxx/aaa.json"
-        },
-        {
-            "name":"新书速递100本11",
-            "author":"网友",
-            "num":"100",
+            "name":"酷安网友推荐2",
+            "author":"酷安基友",
+            "num":"67",
             "url":"http://xxx/aaa.json"
         }
     ]
