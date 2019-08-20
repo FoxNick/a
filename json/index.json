@@ -3,115 +3,22 @@
     "author":"wdise",
     "list":[
         {
-	    "name":"我是老大",
-	    "desc":"新书速递100本",
+            "name":"新书速递100本11",
+            "author":"网友",
+            "num":"100",
             "url":"http://xxx/aaa.json"
         },
-	{
-	    "name":"在看的书222 ",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/bbb.json"
-        },
-	 {
-	    "name":"故事精彩是第一判断标准",
-	     "desc":"新书速递100本",
+        {
+            "name":"新书速递100本11",
+            "author":"网友",
+            "num":"100",
             "url":"http://xxx/aaa.json"
         },
-	{
-	    "name":"白一点的后宫文",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/aaa.json"
-        },
-	{
-	    "name":"在看的书 ",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/bbb.json"
-        },
-	 {
-	    "name":"故事精彩是第一判断标准",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/aaa.json"
-        },
-	{
-	    "name":"白一点的后宫文",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/aaa.json"
-        },
-	{
-	    "name":"在看的书 ",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/bbb.json"
-        },
-	 {
-	    "name":"故事精彩是第一判断标准",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/aaa.json"
-        },
-	{
-	    "name":"白一点的后宫文",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/aaa.json"
-        },
-	{
-	    "name":"在看的书 ",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/bbb.json"
-        },
-	 {
-	    "name":"故事精彩是第一判断标准",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/aaa.json"
-        },
-	{
-	    "name":"白一点的后宫文",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/aaa.json"
-        },
-	{
-	    "name":"在看的书 ",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/bbb.json"
-        },
-	 {
-	    "name":"故事精彩是第一判断标准",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/aaa.json"
-        },
-	{
-	    "name":"白一点的后宫文",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/aaa.json"
-        },
-	{
-	    "name":"在看的书 ",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/bbb.json"
-        },
-	 {
-	    "name":"故事精彩是第一判断标准",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/aaa.json"
-        },
-	{
-	    "name":"白一点的后宫文",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/aaa.json"
-        },
-	{
-	    "name":"在看的书 ",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/bbb.json"
-        },
-	 {
-	    "name":"故事精彩是第一判断标准",
-	     "desc":"新书速递100本",
-            "url":"http://xxx/aaa.json"
-        },
-	{
-	    "name":"白一点的后宫文",
-	     "desc":"新书速递100本",
+        {
+            "name":"新书速递100本11",
+            "author":"网友",
+            "num":"100",
             "url":"http://xxx/aaa.json"
         }
-        
     ]
 }
