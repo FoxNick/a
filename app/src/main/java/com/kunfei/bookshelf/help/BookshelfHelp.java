@@ -11,6 +11,7 @@ import com.kunfei.bookshelf.bean.BookContentBean;
 import com.kunfei.bookshelf.bean.BookExtendBean;
 import com.kunfei.bookshelf.bean.BookInfoBean;
 import com.kunfei.bookshelf.bean.BookShelfBean;
+import com.kunfei.bookshelf.bean.BookSpecStyleBean;
 import com.kunfei.bookshelf.bean.BookmarkBean;
 import com.kunfei.bookshelf.bean.SearchBookBean;
 import com.kunfei.bookshelf.constant.AppConstant;
@@ -18,6 +19,7 @@ import com.kunfei.bookshelf.dao.BookChapterBeanDao;
 import com.kunfei.bookshelf.dao.BookExtendBeanDao;
 import com.kunfei.bookshelf.dao.BookInfoBeanDao;
 import com.kunfei.bookshelf.dao.BookShelfBeanDao;
+import com.kunfei.bookshelf.dao.BookSpecStyleBeanDao;
 import com.kunfei.bookshelf.dao.BookmarkBeanDao;
 import com.kunfei.bookshelf.utils.StringUtils;
 
@@ -93,6 +95,26 @@ public class BookshelfHelp {
         FileHelp.getFolder(AppConstant.BOOK_CACHE_PATH);
         if (clearChapterList)
             DbHelper.getDaoSession().getBookChapterBeanDao().deleteAll();
+    }
+
+
+    public static void clearCaches(BookShelfBean bookShelfBean) {
+
+	     String file = AppConstant.BOOK_CACHE_PATH
+                + formatFolderName(BookshelfHelp.getCachePathName(bookShelfBean.getBookInfoBean().getName(), bookShelfBean.getTag()));
+       // if (!file.exists()) return null;
+
+        //清除缓存文件
+        FileHelp.deleteFile(file);
+
+		//清除缓存的目录信息
+
+
+        List<BookChapterBean>  chapterBeanList = BookshelfHelp.getChapterList(bookShelfBean.getNoteUrl());
+        for(BookChapterBean bcb : chapterBeanList) {
+            DbHelper.getDaoSession().getBookChapterBeanDao().delete(bcb);
+        }
+
     }
 
 
@@ -305,6 +327,14 @@ public class BookshelfHelp {
     public static void removeFromBookShelf(BookShelfBean bookShelfBean, boolean keepCaches) {
         DbHelper.getDaoSession().getBookShelfBeanDao().deleteByKey(bookShelfBean.getNoteUrl());
         DbHelper.getDaoSession().getBookInfoBeanDao().deleteByKey(bookShelfBean.getBookInfoBean().getNoteUrl());
+
+
+        BookSpecStyleBean bbs = getBookSpecStyle(bookShelfBean.getBookInfoBean().getName(), bookShelfBean.getBookInfoBean().getAuthor());
+        if (bbs != null) {//存在则修改
+            DbHelper.getDaoSession().getBookSpecStyleBeanDao().delete(bbs);
+        }
+
+
         delChapterList(bookShelfBean.getNoteUrl());
         if (!keepCaches) {
             String bookName = bookShelfBean.getBookInfoBean().getName();
@@ -327,6 +357,22 @@ public class BookshelfHelp {
         }
     }
 
+
+    public  static BookSpecStyleBean getBookSpecStyle(String bookName,String bookAuthor) {
+
+        List<BookSpecStyleBean> list =   DbHelper.getDaoSession().getBookSpecStyleBeanDao().queryBuilder()
+                .where(BookSpecStyleBeanDao.Properties.BookName.eq(bookName))
+                .where(BookSpecStyleBeanDao.Properties.BookAuthor.eq(bookAuthor))
+                .limit(1)
+                .list();
+
+        if(list.size()>0){
+            return list.get(0);
+        }else{
+            return  null;
+        }
+
+    }
     /**
      * 是否在书架
      */

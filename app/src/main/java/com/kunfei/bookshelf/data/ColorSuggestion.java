@@ -24,6 +24,10 @@ public class ColorSuggestion implements SearchSuggestion {
 
     private String mColorName;
     private boolean mIsHistory = false;
+    private boolean mIsShelf = false;
+    private boolean mIsFind = false;
+    private String mNoteUrl;
+    private String mTag;
 
     public ColorSuggestion(String suggestion) {
         this.mColorName = suggestion.toLowerCase();
@@ -40,6 +44,38 @@ public class ColorSuggestion implements SearchSuggestion {
 
     public boolean getIsHistory() {
         return this.mIsHistory;
+    }
+
+    public boolean ismIsShelf() {
+        return mIsShelf;
+    }
+
+    public void setmIsShelf(boolean mIsShelf) {
+        this.mIsShelf = mIsShelf;
+    }
+
+    public String getmNoteUrl() {
+        return mNoteUrl;
+    }
+
+    public void setmNoteUrl(String mNoteUrl) {
+        this.mNoteUrl = mNoteUrl;
+    }
+
+    public boolean ismIsFind() {
+        return mIsFind;
+    }
+
+    public void setmIsFind(boolean mIsFind) {
+        this.mIsFind = mIsFind;
+    }
+
+    public String getmTag() {
+        return mTag;
+    }
+
+    public void setmTag(String mTag) {
+        this.mTag = mTag;
     }
 
     @Override

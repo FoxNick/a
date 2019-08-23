@@ -6,9 +6,9 @@
     <group android:id="@+id/menuOnLine">
 
         <item
-            android:id="@+id/action_change_source"
-            android:icon="@drawable/ic_exchange"
-            android:title="@string/change_origin"
+            android:id="@+id/action_sound"
+            android:icon="@drawable/ic_headphones"
+            android:title="听书"
             app:showAsAction="always" />
 
         <item
@@ -18,9 +18,9 @@
             app:showAsAction="ifRoom" />
 
         <item
-            android:id="@+id/action_download"
-            android:icon="@drawable/ic_download_line_read"
-            android:title="@string/download_offline"
+            android:id="@+id/add_bookmark1"
+            android:icon="@drawable/ic_bookmark"
+            android:title="@string/bookmark_add"
             app:showAsAction="ifRoom" />
 
         <item
@@ -49,10 +49,19 @@
     </group>
 
     <group android:id="@+id/menuShow">
+
         <item
             android:id="@+id/add_bookmark"
             android:icon="@drawable/ic_bookmark"
             android:title="@string/bookmark_add"
+            app:showAsAction="ifRoom" />
+
+        <item
+            android:id="@+id/action_clear_cache"
+            android:icon="@drawable/ic_clear_cache"
+            app:tint="@color/tv_text_default"
+            android:visible="false"
+            android:title="@string/clear_content"
             app:showAsAction="ifRoom" />
 
         <item

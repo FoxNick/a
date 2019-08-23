@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 
+import static android.text.TextUtils.isEmpty;
 import static com.kunfei.bookshelf.constant.AppConstant.TIME_OUT;
 
 public class WebBookModel {
@@ -52,9 +53,9 @@ public class WebBookModel {
     /**
      * 章节缓存
      */
-    public Observable<BookContentBean> getBookContent(BookShelfBean bookShelfBean, BaseChapterBean chapterBean) {
+    public Observable<BookContentBean> getBookContent(BookShelfBean bookShelfBean, BaseChapterBean chapterBean, BaseChapterBean nextChapterBean) {
         return WebBook.getInstance(chapterBean.getTag())
-                .getBookContent(chapterBean, bookShelfBean)
+                .getBookContent(chapterBean, nextChapterBean, bookShelfBean)
                 .flatMap((bookContentBean -> saveContent(bookShelfBean.getBookInfoBean(), chapterBean, bookContentBean)))
                 .timeout(TIME_OUT, TimeUnit.SECONDS);
     }
@@ -111,7 +112,7 @@ public class WebBookModel {
     private Observable<BookContentBean> saveContent(BookInfoBean infoBean, BaseChapterBean chapterBean, BookContentBean bookContentBean) {
         return Observable.create(e -> {
             bookContentBean.setNoteUrl(chapterBean.getNoteUrl());
-            if (bookContentBean.getDurChapterContent() == null) {
+            if (isEmpty(bookContentBean.getDurChapterContent())) {
                 e.onError(new Throwable("下载章节出错"));
             } else if (infoBean.isAudio()) {
                 bookContentBean.setTimeMillis(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1));

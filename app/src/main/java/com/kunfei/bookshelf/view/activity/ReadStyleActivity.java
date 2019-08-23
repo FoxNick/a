@@ -22,15 +22,23 @@ import com.hwangjr.rxbus.RxBus;
 import com.jaredrummler.android.colorpicker.ColorPickerDialog;
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 import com.kunfei.basemvplib.impl.IPresenter;
+import com.kunfei.bookshelf.DbHelper;
 import com.kunfei.bookshelf.MApplication;
 import com.kunfei.bookshelf.R;
 import com.kunfei.bookshelf.base.MBaseActivity;
+import com.kunfei.bookshelf.bean.BookSpecStyleBean;
 import com.kunfei.bookshelf.constant.RxBusTag;
+import com.kunfei.bookshelf.dao.BookSpecStyleBeanDao;
 import com.kunfei.bookshelf.help.ReadBookControl;
 import com.kunfei.bookshelf.utils.BitmapUtil;
 import com.kunfei.bookshelf.utils.FileUtils;
+import com.kunfei.bookshelf.utils.GsonUtils;
 import com.kunfei.bookshelf.utils.PermissionUtils;
 import com.kunfei.bookshelf.utils.bar.ImmersionBar;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,6 +67,9 @@ public class ReadStyleActivity extends MBaseActivity implements ColorPickerDialo
 
     private ReadBookControl readBookControl = ReadBookControl.getInstance();
     private int textDrawableIndex;
+    private boolean isBSS;
+    private String bookName;
+    private String bookAuthor;
     private int textColor;
     private int bgColor;
     private Drawable bgDrawable;
@@ -112,6 +123,9 @@ public class ReadStyleActivity extends MBaseActivity implements ColorPickerDialo
     protected void initData() {
         Intent intent = getIntent();
         textDrawableIndex = intent.getIntExtra("index", 1);
+        isBSS =  intent.getBooleanExtra("isBSS",false);
+        bookName =  intent.getStringExtra("bookName");
+        bookAuthor =  intent.getStringExtra("bookAuthor");
         bgCustom = readBookControl.getBgCustom(textDrawableIndex);
         textColor = readBookControl.getTextColor(textDrawableIndex);
         Resources resources = this.getResources();
@@ -221,13 +235,34 @@ public class ReadStyleActivity extends MBaseActivity implements ColorPickerDialo
      * 保存配置
      */
     private void saveStyle() {
-        readBookControl.setTextColor(textDrawableIndex, textColor);
-        readBookControl.setBgCustom(textDrawableIndex, bgCustom);
-        readBookControl.setBgColor(textDrawableIndex, bgColor);
-        readBookControl.setDarkStatusIcon(textDrawableIndex, darkStatusIcon);
-        if (bgCustom == 2) {
-            readBookControl.setBgPath(textDrawableIndex, bgPath);
+
+        if(isBSS){
+            Map<String,String> bss = readBookControl.getBookSpecStyle();
+            bss.put("textColor"+textDrawableIndex,textColor+"");
+            bss.put("bgCustom"+textDrawableIndex,bgCustom+"");
+            bss.put("bgColor"+textDrawableIndex,bgColor+"");
+            bss.put("darkStatusIcon"+textDrawableIndex,darkStatusIcon+"");
+            if (bgCustom == 2) {
+                bss.put("bgPath"+textDrawableIndex,bgPath);
+
+            }
+
+            readBookControl.setBookSpecStyle(bss);//存入内存
+            //changeProListener.upBookSpecStyle(bss);//存入数据库
+//            RxBus.get().post(RxBusTag.UPDATE_BOOK_SPEC_STYLE, bss);
+            saveBookSpecStyle(bss);
+
+        }else {
+
+            readBookControl.setTextColor(textDrawableIndex, textColor);
+            readBookControl.setBgCustom(textDrawableIndex, bgCustom);
+            readBookControl.setBgColor(textDrawableIndex, bgColor);
+            readBookControl.setDarkStatusIcon(textDrawableIndex, darkStatusIcon);
+            if (bgCustom == 2) {
+                readBookControl.setBgPath(textDrawableIndex, bgPath);
+            }
         }
+
         readBookControl.initTextDrawableIndex();
         RxBus.get().post(RxBusTag.UPDATE_READ, false);
         finish();
@@ -235,6 +270,53 @@ public class ReadStyleActivity extends MBaseActivity implements ColorPickerDialo
 
     private void setTextKind(ReadBookControl readBookControl) {
         tvContent.setTextSize(readBookControl.getTextSize());
+    }
+
+
+    public BookSpecStyleBean getBookSpecStyle(String bookName,String bookAuthor) {
+
+        List<BookSpecStyleBean> list = DbHelper.getDaoSession().getBookSpecStyleBeanDao().queryBuilder()
+                .where(BookSpecStyleBeanDao.Properties.BookName.eq(bookName))
+                .where(BookSpecStyleBeanDao.Properties.BookAuthor.eq(bookAuthor))
+                .limit(1)
+                .list();
+
+        if (list.size() > 0) {
+            return list.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    public void saveBookSpecStyle( Map<String,String> bookSpecStyle) {
+
+        //查询是否存在特定样式
+        BookSpecStyleBean m = getBookSpecStyle(bookName, bookAuthor);
+
+        if(bookSpecStyle!=null) {
+            if (m != null) {//存在则修改
+
+                m.setStyleJson(GsonUtils.toJsonWithSerializeNulls(bookSpecStyle));
+                DbHelper.getDaoSession().getBookSpecStyleBeanDao().update(m);
+
+            } else {
+
+                BookSpecStyleBean bbs = new BookSpecStyleBean();
+                bbs.setBookName(bookName);//书名
+                bbs.setBookAuthor(bookAuthor);//作者
+                bbs.setStyleJson(GsonUtils.toJsonWithSerializeNulls(bookSpecStyle));
+
+
+                DbHelper.getDaoSession().getBookSpecStyleBeanDao().insertOrReplace(bbs);
+            }
+        }else{
+            //取消特定样式
+            DbHelper.getDaoSession().getBookSpecStyleBeanDao().delete(m);
+        }
+
+
+
+
     }
 
     private void upText() {

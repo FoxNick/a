@@ -21,7 +21,6 @@ import com.kunfei.bookshelf.R;
 import com.kunfei.bookshelf.base.MBaseFragment;
 import com.kunfei.bookshelf.bean.BookSourceBean;
 import com.kunfei.bookshelf.bean.FindKindBean;
-import com.kunfei.bookshelf.bean.FindKindGroupBean;
 import com.kunfei.bookshelf.bean.MyFindKindGroupBean;
 import com.kunfei.bookshelf.bean.SearchBookBean;
 import com.kunfei.bookshelf.bean.SearchHistoryBean;
@@ -37,21 +36,18 @@ import com.kunfei.bookshelf.view.activity.BookDetailActivity;
 
 import com.kunfei.bookshelf.view.activity.BookSourceActivity;
 import com.kunfei.bookshelf.view.activity.MyMainActivity;
-import com.kunfei.bookshelf.view.activity.MyReadBookActivity;
 import com.kunfei.bookshelf.view.adapter.FindSecondAdapter;
 
 import com.kunfei.bookshelf.view.adapter.KindBookAdapter;
 import com.kunfei.bookshelf.view.adapter.MySearchBookAdapter;
 import com.kunfei.bookshelf.widget.modialog.MoDialogHUD;
 import com.kunfei.bookshelf.widget.modialog.SelectSourceDialog;
-import com.kunfei.bookshelf.widget.my_page.TxtChapter;
 import com.kunfei.bookshelf.widget.recycler.refresh.OnLoadMoreListener;
 import com.kunfei.bookshelf.widget.recycler.refresh.RefreshRecyclerView;
 
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.script.SimpleBindings;
 

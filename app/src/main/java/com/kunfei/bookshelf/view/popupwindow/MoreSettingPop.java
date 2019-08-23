@@ -96,6 +96,17 @@ public class MoreSettingPop extends FrameLayout {
     @BindView(R.id.llImmersionStatusBar)
     LinearLayout llImmersionStatusBar;
 
+
+    @BindView(R.id.sb_read_nav)
+    ATESwitch sbReadNav;
+    @BindView(R.id.ll_read_nav)
+    LinearLayout llReadNav;
+
+    @BindView(R.id.sb_left_brightness)
+    ATESwitch sbLeftBrightness;
+
+
+
     private Activity context;
     private ReadBookControl readBookControl = ReadBookControl.getInstance();
     private Callback callback;
@@ -126,7 +137,6 @@ public class MoreSettingPop extends FrameLayout {
         this.callback = callback;
         initData();
         bindEvent();
-        initLight();
     }
 
     private void bindEvent() {
@@ -181,6 +191,23 @@ public class MoreSettingPop extends FrameLayout {
                 RxBus.get().post(RxBusTag.RECREATE, true);
             }
         }));
+
+        sbReadNav.setOnCheckedChangeListener(((compoundButton, b) -> {
+            if (compoundButton.isPressed()) {
+                readBookControl.setShowReadingNav(b);
+                callback.upReadNav();
+            }
+        }));
+
+        sbLeftBrightness.setOnCheckedChangeListener(((compoundButton, b) -> {
+            if (compoundButton.isPressed()) {
+                readBookControl.setLeftBrightness(b);
+                upLight();
+            }
+        }));
+
+
+
         sbHideStatusBar.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (buttonView.isPressed()) {
                 readBookControl.setHideStatusBar(isChecked);
@@ -288,6 +315,7 @@ public class MoreSettingPop extends FrameLayout {
             dialog.show();
         });
 
+
         llLongpressSetting.setOnClickListener(view -> {
             AlertDialog dialog = new AlertDialog.Builder(context)
                     .setTitle(context.getString(R.string.book_longpress_setting))
@@ -333,6 +361,12 @@ public class MoreSettingPop extends FrameLayout {
         sbShowTitle.setChecked(readBookControl.getShowTitle());
         sbShowTimeBattery.setChecked(readBookControl.getShowTimeBattery());
         sbShowLine.setChecked(readBookControl.getShowLine());
+
+        sbReadNav.setChecked(readBookControl.getShowReadingNav());
+        sbLeftBrightness.setChecked(readBookControl.getLeftBrightness());
+
+        upLight();
+
         upView();
     }
 
@@ -416,7 +450,12 @@ public class MoreSettingPop extends FrameLayout {
         (context).getWindow().setAttributes(params);
     }
 
-    public void initLight() {
+
+    public void show() {
+        upLight();
+    }
+
+    public void upLight() {
         hpbLight.setProgress(readBookControl.getLight());
         scbFollowSys.setChecked(readBookControl.getLightFollowSys());
         if (!readBookControl.getLightFollowSys()) {
@@ -426,6 +465,8 @@ public class MoreSettingPop extends FrameLayout {
 
     public interface Callback {
         void upBar();
+
+        void upReadNav();
 
         void keepScreenOnChange(int keepScreenOn);
 

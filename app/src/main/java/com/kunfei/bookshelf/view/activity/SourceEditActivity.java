@@ -434,7 +434,12 @@ public class SourceEditActivity extends MBaseActivity<SourceEditContract.Present
                             return;
                         }
                         try {
-                            File file = new File(SourceEditActivity.this.getExternalCacheDir(), "bookSource.png");
+	                        //获取当前的毫秒值
+					        long time = System.currentTimeMillis();
+					        //将毫秒值转换为String类型数据
+					        String time_stamp = String.valueOf(time);
+        
+                            File file = new File(SourceEditActivity.this.getExternalCacheDir(), "bookSource"+time_stamp+".png");
                             FileOutputStream fOut = new FileOutputStream(file);
                             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
                             fOut.flush();

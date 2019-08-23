@@ -49,7 +49,11 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         app:tabBackground="?attr/selectableItemBackground"
-
+                        android:layout_gravity="bottom"
+                        app:tabGravity="fill"
+                        app:tabIndicatorFullWidth="false"
+                        app:tabIndicatorGravity="bottom"
+                        app:tabMode="fixed"
 
                         />
 
@@ -95,5 +99,8 @@
             app:menu="@menu/my_menu_main_drawer" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
+
+
+
 
 </LinearLayout>

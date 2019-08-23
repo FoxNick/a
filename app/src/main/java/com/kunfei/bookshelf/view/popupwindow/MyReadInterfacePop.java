@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,14 +21,19 @@ import com.kunfei.bookshelf.MApplication;
 import com.kunfei.bookshelf.R;
 import com.kunfei.bookshelf.help.ReadBookControl;
 import com.kunfei.bookshelf.utils.PermissionUtils;
+import com.kunfei.bookshelf.utils.theme.ATH;
 import com.kunfei.bookshelf.view.activity.MyReadBookActivity;
 import com.kunfei.bookshelf.view.activity.ReadStyleActivity;
 import com.kunfei.bookshelf.widget.CustomRoundAngleImageView;
 import com.kunfei.bookshelf.widget.font.FontSelector;
 import com.kunfei.bookshelf.widget.my_page.animation.PageAnimation;
+import com.kunfei.bookshelf.widget.number.NumberPickerDialog;
 import com.kunfei.bookshelf.widget.style.StyleSelector;
+import com.kunfei.bookshelf.widget.views.ATECheckBox;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,6 +71,8 @@ public class MyReadInterfacePop extends FrameLayout {
     FrameLayout flSpace3;
     @BindView(R.id.fl_space_none)
     FrameLayout flSpaceNone;
+    @BindView(R.id.fl_indent)
+    FrameLayout flIndent;
     @BindView(R.id.fl_moreStyle)
     FrameLayout flMoreStyle;
 
@@ -105,6 +114,32 @@ public class MyReadInterfacePop extends FrameLayout {
     @BindView(R.id.fl_morePage)
     FrameLayout flMorePage;
 
+    //
+    @BindView(R.id.fl_chapter_top)
+    FrameLayout flChapterTop;
+    @BindView(R.id.fl_chapter_buttom)
+    FrameLayout flChapterButtom;
+    @BindView(R.id.fl_chapter_size)
+    FrameLayout flChapterSize;
+    @BindView(R.id.fl_chapter_font)
+    FrameLayout flChapterFont;
+
+    @BindView(R.id.tv_chapter_buttom)
+    TextView tvChapterButtom;
+   @BindView(R.id.tv_chapter_top)
+   TextView tvChapterTop;
+    @BindView(R.id.tv_chapter_size)
+    TextView tvChapterSize;
+
+    //样式应用范围
+    @BindView(R.id.cb_this_book)
+    ATECheckBox cbThisBook;
+    //@BindView(R.id.cb_this_source)
+    //ATECheckBox cbThisSource;
+    //@BindView(R.id.cb_this_app)
+    //ATECheckBox cbThisAPP;
+
+    private String[] numbers = {"0.0","0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "2.0"};
 
     private MyReadBookActivity activity;
     private ReadBookControl readBookControl = ReadBookControl.getInstance();
@@ -146,6 +181,8 @@ public class MyReadInterfacePop extends FrameLayout {
         updateBoldText(readBookControl.getBoldSize());
         updateStyleDefault(readBookControl.getStyleDefault());
         updatePageMode(readBookControl.getPageMode());
+        updateChapterStyle();
+        updateStyleArea(readBookControl.getBookSpecStyle());
     }
 
     private void bindEvent() {
@@ -154,17 +191,67 @@ public class MyReadInterfacePop extends FrameLayout {
             @Override
             public void onClick(View v) {
                 int c = readBookControl.getTextSize()-1;
-                readBookControl.setTextSize(c);
+
+                if(cbThisBook.isChecked()) {
+                    Map<String,String> bss = readBookControl.getBookSpecStyle();
+                    bss.put("textSize",c+"");
+                    readBookControl.setBookSpecStyle(bss);//存入内存
+                    changeProListener.upBookSpecStyle(bss);//存入数据库
+                }else{
+                    readBookControl.setTextSize(c);
+                }
+
                 changeProListener.upTextSize();
                 tvTextSize.setText(String.valueOf(c));
             }
+        });
+
+        tvTextSize.setOnClickListener(new OnClickListener() {
+              @Override
+              public void onClick(View v) {
+
+                  NumberPickerDialog npd = new NumberPickerDialog(getContext());
+                  npd.setTitle("设置字体大小")
+                          .setMaxValue((int) 50)
+                          .setMinValue((int) 1)
+                          .setValue((int) readBookControl.getTextSize())
+                          .setListener(new NumberPickerDialog.OnClickListener(){
+                              @Override
+                              public void setNumber(int c) {
+                                  tvTextSize.setText(String.valueOf(c));
+
+                                  if(cbThisBook.isChecked()) {
+                                      Map<String,String> bss = readBookControl.getBookSpecStyle();
+                                      bss.put("textSize",c+"");
+                                      readBookControl.setBookSpecStyle(bss);//存入内存
+                                      changeProListener.upBookSpecStyle(bss);//存入数据库
+                                  }else{
+                                      readBookControl.setTextSize(c);
+                                  }
+
+                                  if (changeProListener != null) {
+                                      changeProListener.upTextSize();
+                                  }
+                              }
+                          })
+                          .create()
+                          .show();
+
+              }
         });
 
         flBigger.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 int c = readBookControl.getTextSize()+1;
-                readBookControl.setTextSize(c);
+                if(cbThisBook.isChecked()) {
+                    Map<String,String> bss = readBookControl.getBookSpecStyle();
+                    bss.put("textSize",c+"");
+                    readBookControl.setBookSpecStyle(bss);//存入内存
+                    changeProListener.upBookSpecStyle(bss);//存入数据库
+                }else{
+                    readBookControl.setTextSize(c);
+                }
                 changeProListener.upTextSize();
                 tvTextSize.setText(String.valueOf(c));
             }
@@ -175,8 +262,16 @@ public class MyReadInterfacePop extends FrameLayout {
             public void onClick(View v) {
 
                 float c = readBookControl.getBoldSize()-0.1f;
-                if(c<0) return;
-                readBookControl.setBoldSize(c);
+                if(c<0)  c = 0.0f;
+
+                if(cbThisBook.isChecked()) {
+                    Map<String,String> bss = readBookControl.getBookSpecStyle();
+                    bss.put("boldSize", c+"");
+                    readBookControl.setBookSpecStyle(bss);//存入内存
+                    changeProListener.upBookSpecStyle(bss);//存入数据库
+                }else {
+                    readBookControl.setBoldSize(c);
+                }
 
                updateBoldText(c);
                 changeProListener.refresh();
@@ -184,11 +279,57 @@ public class MyReadInterfacePop extends FrameLayout {
             }
         });
 
+
+        tvBoldSize.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                NumberPickerDialog npd = new NumberPickerDialog(getContext());
+
+                npd.setDisplayedValues(null);
+                npd.setTitle("设置字体粗细")
+                        .setMaxValue((int) numbers.length-1)
+                        .setDisplayedValues(numbers)
+                        .setMinValue((int) 0)
+                        .setValue((int) (readBookControl.getBoldSize()*10))
+                        .setListener(new NumberPickerDialog.OnClickListener(){
+                            @Override
+                            public void setNumber(int c) {
+                                tvBoldSize.setText(String.valueOf(c/10f));
+
+                                if(cbThisBook.isChecked()) {
+                                    Map<String,String> bss = readBookControl.getBookSpecStyle();
+                                    bss.put("boldSize",(c/10f)+"");
+                                    readBookControl.setBookSpecStyle(bss);//存入内存
+                                    changeProListener.upBookSpecStyle(bss);//存入数据库
+                                }else{
+                                    readBookControl.setBoldSize(c/10f);
+                                }
+
+                                if (changeProListener != null) {
+                                    changeProListener.refresh();
+                                }
+                            }
+                        })
+                        .create()
+                        .show();
+
+            }
+        });
+
+
         flBoldBigger.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 float c = readBookControl.getBoldSize()+0.1f;
-                readBookControl.setBoldSize(c);
+                if(cbThisBook.isChecked()) {
+                    Map<String,String> bss = readBookControl.getBookSpecStyle();
+                    bss.put("boldSize", c+"");
+                    readBookControl.setBookSpecStyle(bss);//存入内存
+                    changeProListener.upBookSpecStyle(bss);//存入数据库
+                }else {
+                    readBookControl.setBoldSize(c);
+                }
                 updateBoldText(c);
                 changeProListener.refresh();
             }
@@ -236,18 +377,66 @@ public class MyReadInterfacePop extends FrameLayout {
             return true;
         });
 
+        //选择標題字体
+        flChapterFont.setOnClickListener(view -> {
+            List<String> per = PermissionUtils.checkMorePermissions(activity, MApplication.PerList);
+            if (per.isEmpty()) {
+                new FontSelector(activity, readBookControl.getChapterFontPath())
+                        .setListener(new FontSelector.OnThisListener() {
+                            @Override
+                            public void setDefault() {
+                                //clearFontPath();
+                                clearChapterFontPath();
+                            }
+
+                            @Override
+                            public void setFontPath(String fontPath) {
+
+                                //setReadFonts(fontPath);
+                                setChapterReadFonts(fontPath);
+                            }
+                        })
+                        .create()
+                        .show();
+            } else {
+                Toast.makeText(activity, "本软件需要存储权限来存储备份书籍信息", Toast.LENGTH_SHORT).show();
+                PermissionUtils.requestMorePermissions(activity, per, MApplication.RESULT__PERMS);
+            }
+        });
+
+        //长按清除字体
+        flChapterFont.setOnLongClickListener(view -> {
+            clearChapterFontPath();
+            activity.toast(R.string.clear_font);
+            return true;
+        });
+
         //默认间距1
         flSpace1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                readBookControl.setStyleDefault(1);
+
+                if(cbThisBook.isChecked()) {
+                    Map<String,String> bss = readBookControl.getBookSpecStyle();
+                    bss.put("styleDefault", 1+"");
+                    bss.put("lineMultiplier", 20+"");
+                    bss.put("paragraphSize", 40+"");
+                    bss.put("paddingTop", 10+"");
+                    bss.put("paddingBottom", 10+"");
+                    bss.put("paddingLeft", 20+"");
+                    bss.put("paddingRight", 20+"");
+                    readBookControl.setBookSpecStyle(bss);//存入内存
+                    changeProListener.upBookSpecStyle(bss);//存入数据库
+                }else {
+                    readBookControl.setStyleDefault(1);
+                    readBookControl.setLineMultiplier(20);
+                    readBookControl.setParagraphSize(40);
+                    readBookControl.setPaddingTop(10);
+                    readBookControl.setPaddingBottom(10);
+                    readBookControl.setPaddingLeft(20);
+                    readBookControl.setPaddingRight(20);
+                }
                 updateStyleDefault(1);
-                readBookControl.setLineMultiplier(1);
-                readBookControl.setParagraphSize(1);
-                readBookControl.setPaddingTop(0);
-                readBookControl.setPaddingBottom(0);
-                readBookControl.setPaddingLeft(20);
-                readBookControl.setPaddingRight(20);
                 changeProListener.upTextSizeAndMargin();
             }
         });
@@ -255,14 +444,29 @@ public class MyReadInterfacePop extends FrameLayout {
         flSpace2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                readBookControl.setStyleDefault(2);
+
+                if(cbThisBook.isChecked()) {
+                    Map<String,String> bss = readBookControl.getBookSpecStyle();
+                    bss.put("styleDefault", 2+"");
+                    bss.put("lineMultiplier", 30+"");
+                    bss.put("paragraphSize", 60+"");
+                    bss.put("paddingTop", 10+"");
+                    bss.put("paddingBottom", 10+"");
+                    bss.put("paddingLeft", 20+"");
+                    bss.put("paddingRight", 20+"");
+                    readBookControl.setBookSpecStyle(bss);//存入内存
+                    changeProListener.upBookSpecStyle(bss);//存入数据库
+                }else {
+                    readBookControl.setStyleDefault(2);
+                    readBookControl.setLineMultiplier(30);
+                    readBookControl.setParagraphSize(60);
+                    readBookControl.setPaddingTop(10);
+                    readBookControl.setPaddingBottom(10);
+                    readBookControl.setPaddingLeft(20);
+                    readBookControl.setPaddingRight(20);
+
+                }
                 updateStyleDefault(2);
-                readBookControl.setLineMultiplier(1);
-                readBookControl.setParagraphSize(2);
-                readBookControl.setPaddingTop(0);
-                readBookControl.setPaddingBottom(0);
-                readBookControl.setPaddingLeft(20);
-                readBookControl.setPaddingRight(20);
                 changeProListener.upTextSizeAndMargin();
             }
         });
@@ -271,14 +475,30 @@ public class MyReadInterfacePop extends FrameLayout {
         flSpace3.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                readBookControl.setStyleDefault(3);
+
+                if(cbThisBook.isChecked()) {
+                    Map<String,String> bss = readBookControl.getBookSpecStyle();
+                    bss.put("styleDefault", 3+"");
+                    bss.put("lineMultiplier", 40+"");
+                    bss.put("paragraphSize", 80+"");
+                    bss.put("paddingTop", 10+"");
+                    bss.put("paddingBottom", 10+"");
+                    bss.put("paddingLeft", 20+"");
+                    bss.put("paddingRight", 20+"");
+                    readBookControl.setBookSpecStyle(bss);//存入内存
+                    changeProListener.upBookSpecStyle(bss);//存入数据库
+                }else {
+                    readBookControl.setStyleDefault(3);
+                    readBookControl.setLineMultiplier(40);
+                    readBookControl.setParagraphSize(80);
+                    readBookControl.setPaddingTop(10);
+                    readBookControl.setPaddingBottom(10);
+                    readBookControl.setPaddingLeft(20);
+                    readBookControl.setPaddingRight(20);
+
+                }
+
                 updateStyleDefault(3);
-                readBookControl.setLineMultiplier(2);
-                readBookControl.setParagraphSize(2);
-                readBookControl.setPaddingTop(0);
-                readBookControl.setPaddingBottom(0);
-                readBookControl.setPaddingLeft(20);
-                readBookControl.setPaddingRight(20);
                 changeProListener.upTextSizeAndMargin();
             }
         });
@@ -287,17 +507,61 @@ public class MyReadInterfacePop extends FrameLayout {
         flSpaceNone.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                readBookControl.setStyleDefault(4);
+
+                if(cbThisBook.isChecked()) {
+                    Map<String,String> bss = readBookControl.getBookSpecStyle();
+                    bss.put("styleDefault", 4+"");
+                    bss.put("lineMultiplier", 0+"");
+                    bss.put("paragraphSize", 0+"");
+                    bss.put("paddingTop", 0+"");
+                    bss.put("paddingBottom", 0+"");
+                    bss.put("paddingLeft", 20+"");
+                    bss.put("paddingRight", 20+"");
+                    readBookControl.setBookSpecStyle(bss);//存入内存
+                    changeProListener.upBookSpecStyle(bss);//存入数据库
+                }else {
+                    readBookControl.setStyleDefault(4);
+                    readBookControl.setLineMultiplier(0);
+                    readBookControl.setParagraphSize(0);
+                    readBookControl.setPaddingTop(0);
+                    readBookControl.setPaddingBottom(0);
+                    readBookControl.setPaddingLeft(20);
+                    readBookControl.setPaddingRight(20);
+
+                }
                 updateStyleDefault(4);
-                readBookControl.setLineMultiplier(0);
-                readBookControl.setParagraphSize(0);
-                readBookControl.setPaddingTop(0);
-                readBookControl.setPaddingBottom(0);
-                readBookControl.setPaddingLeft(20);
-                readBookControl.setPaddingRight(20);
                 changeProListener.upTextSizeAndMargin();
             }
         });
+
+        //缩进
+        flIndent.setOnClickListener(v -> {
+            AlertDialog dialog = new AlertDialog.Builder(activity, R.style.alertDialogThemeRead)
+                    .setTitle(activity.getString(R.string.indent))
+                    .setSingleChoiceItems(activity.getResources().getStringArray(R.array.indent),
+                            readBookControl.getIndent(),
+                            (dialogInterface, i) -> {
+                                if(cbThisBook.isChecked()) {
+                                    Map<String,String> bss = readBookControl.getBookSpecStyle();
+                                    bss.put("indent",i+"");
+                                    readBookControl.setBookSpecStyle(bss);//存入内存
+                                    changeProListener.upBookSpecStyle(bss);//存入数据库
+                                }else {
+                                    readBookControl.setIndent(i);
+                                }
+
+                                changeProListener.refresh();
+                                dialogInterface.dismiss();
+                            })
+                    .create();
+            dialog.show();
+            //ATH.setAlertDialogTint(dialog);
+        });
+
+
+
+
+
 
         //自定义样式
         flMoreStyle.setOnClickListener(view -> {
@@ -305,49 +569,161 @@ public class MyReadInterfacePop extends FrameLayout {
                     .setListener(new StyleSelector.OnThisListener() {
                         @Override
                         public void setLineMultiplier(float number) {
-                            readBookControl.setStyleDefault(5);
+                            if(cbThisBook.isChecked()) {
+                                Map<String,String> bss = readBookControl.getBookSpecStyle();
+                                bss.put("styleDefault",5+"");
+                                bss.put("lineMultiplier",number+"");
+                                readBookControl.setBookSpecStyle(bss);//存入内存
+                                changeProListener.upBookSpecStyle(bss);//存入数据库
+                            }else {
+                                readBookControl.setStyleDefault(5);
+                                readBookControl.setLineMultiplier(number);
+                            }
                             updateStyleDefault(5);
-                            readBookControl.setLineMultiplier(number);
                             changeProListener.upTextSize();
                         }
 
                         @Override
                         public void setParagraphSize(float number) {
-                            readBookControl.setStyleDefault(5);
+                            if(cbThisBook.isChecked()) {
+                                Map<String,String> bss = readBookControl.getBookSpecStyle();
+                                bss.put("styleDefault",5+"");
+                                bss.put("paragraphSize",number+"");
+                                readBookControl.setBookSpecStyle(bss);//存入内存
+                                changeProListener.upBookSpecStyle(bss);//存入数据库
+                            }else {
+                                readBookControl.setStyleDefault(5);
+                                readBookControl.setParagraphSize(number);
+                            }
                             updateStyleDefault(5);
-                            readBookControl.setParagraphSize(number);
                             changeProListener.upTextSize();
                         }
 
                         @Override
                         public void setPaddingTop(int number) {
-                            readBookControl.setStyleDefault(5);
+                            if(cbThisBook.isChecked()) {
+                                Map<String,String> bss = readBookControl.getBookSpecStyle();
+                                bss.put("styleDefault",5+"");
+                                bss.put("paddingTop",number+"");
+                                readBookControl.setBookSpecStyle(bss);//存入内存
+                                changeProListener.upBookSpecStyle(bss);//存入数据库
+                            }else {
+                                readBookControl.setStyleDefault(5);
+                                readBookControl.setPaddingTop(number);
+                            }
                             updateStyleDefault(5);
-                            readBookControl.setPaddingTop(number);
                             changeProListener.upMargin();
                         }
 
                         @Override
                         public void setPaddingBottom(int number) {
-                            readBookControl.setStyleDefault(5);
+                            if(cbThisBook.isChecked()) {
+                                Map<String,String> bss = readBookControl.getBookSpecStyle();
+                                bss.put("styleDefault",5+"");
+                                bss.put("paddingBottom",number+"");
+                                readBookControl.setBookSpecStyle(bss);//存入内存
+                                changeProListener.upBookSpecStyle(bss);//存入数据库
+                            }else {
+                                readBookControl.setStyleDefault(5);
+                                readBookControl.setPaddingBottom(number);
+                            }
                             updateStyleDefault(5);
-                            readBookControl.setPaddingBottom(number);
                             changeProListener.upMargin();
                         }
 
                         @Override
                         public void setPaddingLeft(int number) {
-                            readBookControl.setStyleDefault(5);
+                            if(cbThisBook.isChecked()) {
+                                Map<String,String> bss = readBookControl.getBookSpecStyle();
+                                bss.put("styleDefault",5+"");
+                                bss.put("paddingLeft",number+"");
+                                readBookControl.setBookSpecStyle(bss);//存入内存
+                                changeProListener.upBookSpecStyle(bss);//存入数据库
+                            }else {
+                                readBookControl.setStyleDefault(5);
+                                readBookControl.setPaddingLeft(number);
+                            }
                             updateStyleDefault(5);
-                            readBookControl.setPaddingLeft(number);
                             changeProListener.upMargin();
                         }
 
                         @Override
                         public void setPaddingRight(int number) {
-                            readBookControl.setStyleDefault(5);
+                            if(cbThisBook.isChecked()) {
+                                Map<String,String> bss = readBookControl.getBookSpecStyle();
+                                bss.put("styleDefault",5+"");
+                                bss.put("paddingRight",number+"");
+                                readBookControl.setBookSpecStyle(bss);//存入内存
+                                changeProListener.upBookSpecStyle(bss);//存入数据库
+                            }else {
+                                readBookControl.setStyleDefault(5);
+                                readBookControl.setPaddingRight(number);
+                            }
                             updateStyleDefault(5);
-                            readBookControl.setPaddingRight(number);
+                            changeProListener.upMargin();
+                        }
+
+                        @Override
+                        public void setTipPaddingTop(int number) {
+                            if(cbThisBook.isChecked()) {
+                                Map<String,String> bss = readBookControl.getBookSpecStyle();
+                                bss.put("styleDefault",5+"");
+                                bss.put("tipPaddingTop",number+"");
+                                readBookControl.setBookSpecStyle(bss);//存入内存
+                                changeProListener.upBookSpecStyle(bss);//存入数据库
+                            }else {
+                                readBookControl.setStyleDefault(5);
+                                readBookControl.setTipPaddingTop(number);
+                            }
+                            updateStyleDefault(5);
+                            changeProListener.upMargin();
+                        }
+
+                        @Override
+                        public void setTipPaddingBottom(int number) {
+                            if(cbThisBook.isChecked()) {
+                                Map<String,String> bss = readBookControl.getBookSpecStyle();
+                                bss.put("styleDefault",5+"");
+                                bss.put("tipPaddingBottom",number+"");
+                                readBookControl.setBookSpecStyle(bss);//存入内存
+                                changeProListener.upBookSpecStyle(bss);//存入数据库
+                            }else {
+                                readBookControl.setStyleDefault(5);
+                                readBookControl.setTipPaddingBottom(number);
+                            }
+                            updateStyleDefault(5);
+                            changeProListener.upMargin();
+                        }
+
+                        @Override
+                        public void setTipPaddingLeft(int number) {
+                            if(cbThisBook.isChecked()) {
+                                Map<String,String> bss = readBookControl.getBookSpecStyle();
+                                bss.put("styleDefault",5+"");
+                                bss.put("tipPaddingLeft",number+"");
+                                readBookControl.setBookSpecStyle(bss);//存入内存
+                                changeProListener.upBookSpecStyle(bss);//存入数据库
+                            }else {
+                                readBookControl.setStyleDefault(5);
+                                readBookControl.setTipPaddingLeft(number);
+                            }
+                            updateStyleDefault(5);
+                            changeProListener.upMargin();
+                        }
+
+                        @Override
+                        public void setTipPaddingRight(int number) {
+                            if(cbThisBook.isChecked()) {
+                                Map<String,String> bss = readBookControl.getBookSpecStyle();
+                                bss.put("styleDefault",5+"");
+                                bss.put("tipPaddingRight",number+"");
+                                readBookControl.setBookSpecStyle(bss);//存入内存
+                                changeProListener.upBookSpecStyle(bss);//存入数据库
+                            }else {
+                                readBookControl.setStyleDefault(5);
+                                readBookControl.setTipPaddingRight(number);
+                            }
+                            updateStyleDefault(5);
                             changeProListener.upMargin();
                         }
                         
@@ -362,24 +738,31 @@ public class MyReadInterfacePop extends FrameLayout {
         //背景选择
         flBg0.setOnClickListener(v -> {
             updateBg(0);
+            changeNumber(0);
             changeProListener.bgChange();
         });
         flBg1.setOnClickListener(v -> {
             updateBg(1);
+            changeNumber(1);
             changeProListener.bgChange();
         });
         flBg2.setOnClickListener(v -> {
             updateBg(2);
+            changeNumber(2);
             changeProListener.bgChange();
         });
         flBg3.setOnClickListener(v -> {
             updateBg(3);
+            changeNumber(3);
             changeProListener.bgChange();
         });
         //自定颜色
         flMoreColor.setOnClickListener(view -> {
             Intent intent = new Intent(activity, ReadStyleActivity.class);
             intent.putExtra("index", readBookControl.getTextDrawableIndex());
+            intent.putExtra("isBSS", cbThisBook.isChecked());
+            intent.putExtra("bookName",activity.getBookName());
+            intent.putExtra("bookAuthor",activity.getBookAuthor());
             activity.startActivity(intent);
         });
 
@@ -387,7 +770,16 @@ public class MyReadInterfacePop extends FrameLayout {
         flPage1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                readBookControl.setPageMode(0);
+
+                if(cbThisBook.isChecked()) {
+                    Map<String,String> bss = readBookControl.getBookSpecStyle();
+                    bss.put("pageMode",0+"");
+                    readBookControl.setBookSpecStyle(bss);//存入内存
+                    changeProListener.upBookSpecStyle(bss);//存入数据库
+                }else {
+                    readBookControl.setPageMode(0);
+                }
+
                 updatePageMode(0);
                 changeProListener.upPageMode();
             }
@@ -397,7 +789,14 @@ public class MyReadInterfacePop extends FrameLayout {
         flPage2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                readBookControl.setPageMode(1);
+                if(cbThisBook.isChecked()) {
+                    Map<String,String> bss = readBookControl.getBookSpecStyle();
+                    bss.put("pageMode",1+"");
+                    readBookControl.setBookSpecStyle(bss);//存入内存
+                    changeProListener.upBookSpecStyle(bss);//存入数据库
+                }else {
+                    readBookControl.setPageMode(1);
+                }
                 updatePageMode(1);
                 changeProListener.upPageMode();
             }
@@ -407,7 +806,14 @@ public class MyReadInterfacePop extends FrameLayout {
         flPage3.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                readBookControl.setPageMode(2);
+                if(cbThisBook.isChecked()) {
+                    Map<String,String> bss = readBookControl.getBookSpecStyle();
+                    bss.put("pageMode",2+"");
+                    readBookControl.setBookSpecStyle(bss);//存入内存
+                    changeProListener.upBookSpecStyle(bss);//存入数据库
+                }else {
+                    readBookControl.setPageMode(2);
+                }
                 updatePageMode(2);
                 changeProListener.upPageMode();
             }
@@ -419,7 +825,14 @@ public class MyReadInterfacePop extends FrameLayout {
             AlertDialog dialog = new AlertDialog.Builder(activity, R.style.alertDialogThemeRead)
                     .setTitle(activity.getString(R.string.page_mode))
                     .setSingleChoiceItems(PageAnimation.Mode.getAllPageMode(), readBookControl.getPageMode(), (dialogInterface, i) -> {
-                        readBookControl.setPageMode(i);
+                        if(cbThisBook.isChecked()) {
+                            Map<String,String> bss = readBookControl.getBookSpecStyle();
+                            bss.put("pageMode",i+"");
+                            readBookControl.setBookSpecStyle(bss);//存入内存
+                            changeProListener.upBookSpecStyle(bss);//存入数据库
+                        }else {
+                            readBookControl.setPageMode(i);
+                        }
                         updatePageMode(i);
                         changeProListener.upPageMode();
                         dialogInterface.dismiss();
@@ -427,20 +840,221 @@ public class MyReadInterfacePop extends FrameLayout {
                     .create();
             dialog.show();
         });
+
+
+
+        //
+        flChapterTop.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                NumberPickerDialog npd = new NumberPickerDialog(getContext());
+
+                npd.setDisplayedValues(null);
+                npd.setTitle("设置章节名上边距")
+                        .setMaxValue(300)
+                        .setMinValue((int) 0)
+                        .setValue((int)readBookControl.getFirstPageMarginTop())
+                        .setListener(new NumberPickerDialog.OnClickListener(){
+                            @Override
+                            public void setNumber(int c) {
+                                if(cbThisBook.isChecked()) {
+                                    Map<String,String> bss = readBookControl.getBookSpecStyle();
+                                    bss.put("firstPageMarginTop",c+"");
+                                    readBookControl.setBookSpecStyle(bss);//存入内存
+                                    changeProListener.upBookSpecStyle(bss);//存入数据库
+                                }else{
+                                    readBookControl.setFirstPageMarginTop(c);
+                                }
+
+                                updateChapterStyle();
+
+                                if (changeProListener != null) {
+                                    changeProListener.refresh();
+                                }
+                            }
+                        })
+                        .create()
+                        .show();
+
+            }
+        });
+
+
+        flChapterButtom.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                NumberPickerDialog npd = new NumberPickerDialog(getContext());
+
+                npd.setDisplayedValues(null);
+                npd.setTitle("设置章节名下边距")
+                        .setMaxValue(300)
+                        .setMinValue((int) 0)
+                        .setValue((int)readBookControl.getFirstPageMarginButtom())
+                        .setListener(new NumberPickerDialog.OnClickListener(){
+                            @Override
+                            public void setNumber(int c) {
+                                if(cbThisBook.isChecked()) {
+                                    Map<String,String> bss = readBookControl.getBookSpecStyle();
+                                    bss.put("firstPageMarginButtom",c+"");
+                                    readBookControl.setBookSpecStyle(bss);//存入内存
+                                    changeProListener.upBookSpecStyle(bss);//存入数据库
+                                }else{
+                                    readBookControl.setFirstPageMarginButtom(c);
+                                }
+
+                                updateChapterStyle();
+
+                                if (changeProListener != null) {
+                                    changeProListener.refresh();
+                                }
+                            }
+                        })
+                        .create()
+                        .show();
+
+            }
+        });
+
+
+        flChapterSize.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                NumberPickerDialog npd = new NumberPickerDialog(getContext());
+
+                npd.setDisplayedValues(null);
+                npd.setTitle("设置章节名字体大小")
+                        .setMaxValue(100)
+                        .setMinValue((int) 0)
+                        .setValue((int)readBookControl.getTitleSize())
+                        .setListener(new NumberPickerDialog.OnClickListener(){
+                            @Override
+                            public void setNumber(int c) {
+                                if(cbThisBook.isChecked()) {
+                                    Map<String,String> bss = readBookControl.getBookSpecStyle();
+                                    bss.put("titleSize",c+"");
+                                    readBookControl.setBookSpecStyle(bss);//存入内存
+                                    changeProListener.upBookSpecStyle(bss);//存入数据库
+                                }else{
+                                    readBookControl.setTitleSize(c);
+                                }
+
+                                updateChapterStyle();
+
+                                if (changeProListener != null) {
+                                    changeProListener.refresh();
+                                }
+                            }
+                        })
+                        .create()
+                        .show();
+
+            }
+        });
+
+        cbThisBook.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(isChecked){
+                    //将当前字体大小，粗细，字体，边距，缩进，文字颜色，背景颜色，图片，翻页，单独存在一个map中
+                    HashMap bss = combineAllStyle();
+                    readBookControl.setBookSpecStyle(bss);//存入内存
+                    changeProListener.upBookSpecStyle(bss);//存入具体书里
+
+                }else{
+                    //清除
+                    readBookControl.setBookSpecStyle(null);//存入内存
+                    changeProListener.upBookSpecStyle(null);//存入具体书里
+                    changeProListener.refresh();
+                }
+            }
+        });
     }
+
+
+    public void changeNumber(int indx) {
+
+        if(cbThisBook.isChecked()) {
+            Map<String,String> bss = readBookControl.getBookSpecStyle();
+
+            if (readBookControl.getIsNightTheme()) {
+                bss.put("textDrawableIndexNight", indx+"");
+            }else{
+                bss.put("textDrawableIndex", indx+"");
+            }
+            readBookControl.setBookSpecStyle(bss);//存入内存
+            readBookControl.setTextDrawableIndex1(indx);
+            changeProListener.upBookSpecStyle(bss);//存入数据库
+        }else {
+            readBookControl.setTextDrawableIndex(indx);
+        }
+    }
+
+
 
 
 
 
     //设置字体
     public void setReadFonts(String path) {
-        readBookControl.setReadBookFont(path);
+
+
+        if(cbThisBook.isChecked()) {
+            Map<String,String> bss = readBookControl.getBookSpecStyle();
+            bss.put("fontPath", path);
+            readBookControl.setBookSpecStyle(bss);//存入内存
+            changeProListener.upBookSpecStyle(bss);//存入数据库
+        }else {
+            readBookControl.setReadBookFont(path);
+        }
+
+        changeProListener.refresh();
+    }
+
+    //设置字体
+    public void setChapterReadFonts(String path) {
+
+
+        if(cbThisBook.isChecked()) {
+            Map<String,String> bss = readBookControl.getBookSpecStyle();
+            bss.put("chapterFontPath", path);
+            readBookControl.setBookSpecStyle(bss);//存入内存
+            changeProListener.upBookSpecStyle(bss);//存入数据库
+        }else {
+            readBookControl.setChapterBookFont(path);
+        }
+
         changeProListener.refresh();
     }
 
     //清除字体
     private void clearFontPath() {
-        readBookControl.setReadBookFont(null);
+        if(cbThisBook.isChecked()) {
+            Map<String,String> bss = readBookControl.getBookSpecStyle();
+            bss.put("fontPath", null);
+            readBookControl.setBookSpecStyle(bss);//存入内存
+            changeProListener.upBookSpecStyle(bss);//存入数据库
+        }else {
+            readBookControl.setReadBookFont(null);
+        }
+
+        changeProListener.refresh();
+    }
+
+
+    private void clearChapterFontPath() {
+        if(cbThisBook.isChecked()) {
+            Map<String,String> bss = readBookControl.getBookSpecStyle();
+            bss.put("chapterFontPath", null);
+            readBookControl.setBookSpecStyle(bss);//存入内存
+            changeProListener.upBookSpecStyle(bss);//存入数据库
+        }else {
+            readBookControl.setChapterBookFont(null);
+        }
+
         changeProListener.refresh();
     }
 
@@ -492,6 +1106,20 @@ public class MyReadInterfacePop extends FrameLayout {
         //tvBold.setSelected(styleDefault);
     }
 
+    private void updateStyleArea(Map<String,String> m) {
+        if(m!=null){
+            Log.d("使用特有样式","updateStyleArea");
+            cbThisBook.setChecked(true);
+        }
+    }
+
+    private  void updateChapterStyle(){
+        java.text.DecimalFormat myformat=new java.text.DecimalFormat("0");
+
+        tvChapterTop.setText("上("+myformat.format(readBookControl.getFirstPageMarginTop())+")");
+        tvChapterButtom.setText("下("+myformat.format(readBookControl.getFirstPageMarginButtom())+")");
+        tvChapterSize.setText("字("+myformat.format(readBookControl.getTitleSize())+")");
+    }
 
     private void updatePageMode(int pageMode) {
         switch (pageMode) {
@@ -588,10 +1216,56 @@ public class MyReadInterfacePop extends FrameLayout {
                 break;
         }
         */
-        readBookControl.setTextDrawableIndex(index);
+
+
+
+    }
+
+    private  HashMap combineAllStyle(){
+        HashMap bss = new HashMap();
+
+        bss.put("textSize",readBookControl.getTextSize()+"");
+        bss.put("boldSize",readBookControl.getBoldSize()+"");
+        bss.put("fontPath",readBookControl.getFontPath()+"");
+
+        bss.put("indent",readBookControl.getIndent()+"");
+        bss.put("styleDefault",readBookControl.getStyleDefault()+"");
+        bss.put("lineMultiplier",readBookControl.getLineMultiplier()+"");
+        bss.put("paragraphSize",readBookControl.getParagraphSize()+"");
+        bss.put("paddingTop",readBookControl.getPaddingTop()+"");
+        bss.put("paddingBottom",readBookControl.getPaddingBottom()+"");
+        bss.put("paddingLeft",readBookControl.getPaddingLeft()+"");
+        bss.put("paddingRight",readBookControl.getPaddingRight()+"");
+        bss.put("tipPaddingTop",readBookControl.getTipPaddingTop()+"");
+        bss.put("tipPaddingBottom",readBookControl.getTipPaddingBottom()+"");
+        bss.put("tipPaddingLeft",readBookControl.getTipPaddingLeft()+"");
+        bss.put("tipPaddingRight",readBookControl.getTipPaddingRight()+"");
+
+
+        for(int ii =0;ii<4;ii++){
+            bss.put("textColor"+ii,readBookControl.getTextColor(ii)+"");
+            bss.put("bgCustom"+ii,readBookControl.getBgCustom(ii)+"");
+            bss.put("bgColor"+ii,readBookControl.getBgColor(ii)+"");
+            bss.put("darkStatusIcon"+ii,readBookControl.getDarkStatusIcon(ii)+"");
+            bss.put("bgPath"+ii,readBookControl.getBgPath(ii)+"");
+        }
+
+
+
+        bss.put("firstPageMarginTop",readBookControl.getFirstPageMarginTop()+"");
+        bss.put("firstPageMarginButtom",readBookControl.getFirstPageMarginButtom()+"");
+        bss.put("titleSize",readBookControl.getTitleSize()+"");
+        bss.put("chapterFontPath",readBookControl.getChapterFontPath()+"");
+
+
+
+        return  bss;
     }
 
     public interface OnChangeProListener {
+
+        void upBookSpecStyle(Map<String,String> m);
+
         void upPageMode();
 
         void upTextSize();

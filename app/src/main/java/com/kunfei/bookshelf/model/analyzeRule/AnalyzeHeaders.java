@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static android.text.TextUtils.isEmpty;
-
 import static com.kunfei.bookshelf.constant.AppConstant.DEFAULT_USER_AGENT;
 
 /**

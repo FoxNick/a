@@ -54,6 +54,12 @@
     <string-array name="progress_display_list_title">
         <item>@string/display_chapter</item>
         <item>@string/display_percnet</item>
+        <item>@string/display_no</item>
+    </string-array>
+
+    <string-array name="read_name_list_title">
+        <item>显示</item>
+        <item>不显示</item>
     </string-array>
 
     <string-array name="longpress_setting_list_title">
@@ -133,6 +139,15 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+
+
+    <string-array name="indent">
+        <item>@string/indent_0</item>
+        <item>@string/indent_1</item>
+        <item>@string/indent_2</item>
+        <item>@string/indent_3</item>
+        <item>@string/indent_4</item>
     </string-array>
 
 </resources>

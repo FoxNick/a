@@ -173,8 +173,7 @@ public class CheckSourceService extends Service {
     }
 
     private synchronized void nextCheck() {
-        checkIndex++;
-        if (checkIndex > threadsNum) {
+        checkIndex++;if (checkIndex > threadsNum) {
             String msg = String.format(getString(R.string.progress_show), checkIndex - threadsNum, bookSourceBeanList.size());
             RxBus.get().post(RxBusTag.CHECK_SOURCE_STATE, msg);
             updateNotification(checkIndex - threadsNum, msg);

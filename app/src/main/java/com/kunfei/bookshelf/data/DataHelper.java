@@ -21,6 +21,17 @@ import android.widget.Filter;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.kunfei.bookshelf.DbHelper;
+import com.kunfei.bookshelf.MApplication;
+import com.kunfei.bookshelf.bean.BookInfoBean;
+import com.kunfei.bookshelf.bean.BookShelfBean;
+import com.kunfei.bookshelf.bean.BookSourceBean;
+import com.kunfei.bookshelf.bean.MyFindKindGroupBean;
+import com.kunfei.bookshelf.bean.SearchHistoryBean;
+import com.kunfei.bookshelf.dao.BookInfoBeanDao;
+import com.kunfei.bookshelf.dao.BookShelfBeanDao;
+import com.kunfei.bookshelf.dao.BookSourceBeanDao;
+import com.kunfei.bookshelf.model.BookSourceManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -150,6 +161,51 @@ public class DataHelper {
                         return lhs.getIsHistory() ? -1 : 0;
                     }
                 });
+
+
+                //查询书架
+                List<BookShelfBean> bookShelfList = DbHelper.getDaoSession().getBookShelfBeanDao().queryBuilder()
+                        .orderDesc(BookShelfBeanDao.Properties.FinalDate).limit(10).list();
+
+                for (int i = 0; i < bookShelfList.size(); i++) {
+                    BookInfoBean bookInfoBean = DbHelper.getDaoSession().getBookInfoBeanDao().queryBuilder()
+                            .where(BookInfoBeanDao.Properties.NoteUrl.eq(bookShelfList.get(i).getNoteUrl()), BookInfoBeanDao.Properties.Name.like("%" + constraint.toString() + "%"))
+                            .limit(1).build().unique();
+
+                    if (bookInfoBean != null ) {
+                        //bookShelfList.get(i).setBookInfoBean(bookInfoBean);
+                        ColorSuggestion ee = new ColorSuggestion(bookInfoBean.getName());
+                        ee.setmNoteUrl(bookInfoBean.getNoteUrl());
+                        ee.setmIsShelf(true);
+                        suggestionList.add(ee);
+                    }
+                }
+
+                //查询发现
+                boolean showAllFind = MApplication.getInstance().getConfigPreferences().getBoolean("showAllFind", true);
+                List<BookSourceBean> sourceBeans = new ArrayList<BookSourceBean> ();
+                if(showAllFind){
+                    sourceBeans =  DbHelper.getDaoSession().getBookSourceBeanDao().queryBuilder()
+                            .orderAsc(BookSourceBeanDao.Properties.SerialNumber)
+                            .where(BookSourceBeanDao.Properties.BookSourceName.like("%" + constraint.toString() + "%"))
+                            .limit(10)
+                            .list();
+                }else{
+                    sourceBeans = DbHelper.getDaoSession().getBookSourceBeanDao().queryBuilder()
+                            .where(BookSourceBeanDao.Properties.Enable.eq(true),BookSourceBeanDao.Properties.BookSourceName.like("%" + constraint.toString() + "%"))
+                            .orderAsc(BookSourceBeanDao.Properties.SerialNumber)
+                            .limit(10)
+                            .list();
+                }
+
+                for (BookSourceBean sourceBean : sourceBeans) {
+                    ColorSuggestion ee = new ColorSuggestion(sourceBean.getBookSourceName());
+                    ee.setmTag(sourceBean.getBookSourceUrl());
+                    ee.setmIsFind(true);
+                    suggestionList.add(ee);
+                }
+
+
                 results.values = suggestionList;
                 results.count = suggestionList.size();
 

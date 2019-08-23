@@ -46,9 +46,18 @@
     <MultiSelectListPreference
         android:entries="@array/bookshelf_show_title"
         android:entryValues="@array/bookshelf_show_value"
+        android:defaultValue="@array/bookshelf_show_value"
         android:key="@string/pk_bookshelf_show"
         android:title="@string/bookshelf_show" />
 
+
+    <com.kunfei.bookshelf.widget.number.NumberPickerPreference
+        android:defaultValue="10"
+        android:key="@string/pk_bookshelf_space"
+        android:summary="@string/bookshelf_space_summary"
+        android:title="@string/update_bookshelf_space"
+        app:MaxValue="50"
+        app:MinValue="0" />
 
     <SwitchPreference
         android:defaultValue="false"

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:orientation="vertical"
+    android:background="#ffffffff"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true"
+    android:animateLayoutChanges="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/mHomeViewPager"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/mHomeNavigation" />
+
+    <LinearLayout android:id="@+id/mHomeNavigation"
+        android:background="#ffffffff"
+        android:layout_width="fill_parent"
+        android:layout_above="@id/vwNavigationBar"
+        android:layout_height="52.0dip"
+        android:elevation="8.0dip">
+        <com.kunfei.bookshelf.widget.RippleView
+            android:id="@+id/pv_bookshelf"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:layout_toLeftOf="@+id/pv_discover"
+            app:rv_type="rectangle"
+            rv_centered="true"
+            >
+
+
+                <com.kunfei.bookshelf.widget.StateImageView
+                    android:id="@+id/siv_bookshelf"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:checked="false"
+                    android:clickable="true"
+                    android:src="@drawable/ic_nav_1"
+                    android:scaleType="center"
+                    android:contentDescription="书架" />
+
+
+
+        </com.kunfei.bookshelf.widget.RippleView>
+
+        <com.kunfei.bookshelf.widget.RippleView
+            android:id="@+id/pv_discover"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:layout_toLeftOf="@+id/pv_profile"
+            app:rv_type="rectangle"
+            rv_centered="true"
+            >
+            <com.kunfei.bookshelf.widget.StateImageView
+                android:id="@+id/siv_discover"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ic_nav_2"
+                android:scaleType="center"
+                android:checked="false"
+                android:clickable="true"
+                android:contentDescription="书单" />
+        </com.kunfei.bookshelf.widget.RippleView>
+
+        <com.kunfei.bookshelf.widget.RippleView
+            android:id="@+id/pv_profile"
+            android:layout_width="0.0dip"
+            android:visibility="gone"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            app:rv_type="rectangle"
+            rv_centered="true">
+            <com.kunfei.bookshelf.widget.StateImageView
+                android:id="@+id/siv_profile"
+
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ic_nav_3"
+                android:scaleType="center"
+                android:checked="false"
+                android:focusable="true"
+                android:clickable="true"
+                android:contentDescription="发现" />
+        </com.kunfei.bookshelf.widget.RippleView>
+    </LinearLayout>
+    <View
+        android:id="@+id/vwNavigationBar"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="0dp"
+        android:background="@color/colorAccent" />
+</RelativeLayout>

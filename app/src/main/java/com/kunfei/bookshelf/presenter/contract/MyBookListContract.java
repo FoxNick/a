@@ -39,5 +39,9 @@ public interface MyBookListContract {
 
     interface Presenter extends IPresenter {
         void queryBookShelf(Boolean needRefresh, int group);
+
+        void removeFromBookShelf(BookShelfBean bookShelf);
+
+        void clearCaches(BookShelfBean bookShelf);
     }
 }

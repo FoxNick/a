@@ -128,6 +128,71 @@ public class MyBookListPresenter extends BasePresenterImpl<MyBookListContract.Vi
         }
     }
 
+
+    @Override
+    public void clearCaches(BookShelfBean bookShelf) {
+        if (bookShelf != null) {
+            Observable.create((ObservableOnSubscribe<Boolean>) e -> {
+                BookshelfHelp.clearCaches(bookShelf);
+                e.onNext(true);
+                e.onComplete();
+            }).compose(RxUtils::toSimpleSingle)
+                    .subscribe(new MyObserver<Boolean>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            compositeDisposable.add(d);
+                        }
+
+                        @Override
+                        public void onNext(Boolean value) {
+                            if (value) {
+                                mView.toast("清除书籍缓存成功！");
+                            } else {
+                                mView.toast("清除书籍缓存失败！");
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            mView.toast("清除书籍缓存失败！");
+                        }
+                    });
+        }
+    }
+
+    @Override
+    public void removeFromBookShelf(BookShelfBean bookShelf) {
+        if (bookShelf != null) {
+            Observable.create((ObservableOnSubscribe<Boolean>) e -> {
+                BookshelfHelp.removeFromBookShelf(bookShelf);
+                e.onNext(true);
+                e.onComplete();
+            }).compose(RxUtils::toSimpleSingle)
+                    .subscribe(new MyObserver<Boolean>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            compositeDisposable.add(d);
+                        }
+
+                        @Override
+                        public void onNext(Boolean value) {
+                            if (value) {
+                                RxBus.get().post(RxBusTag.HAD_REMOVE_BOOK, bookShelf);
+                            } else {
+                                mView.toast("删除书籍失败！");
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            mView.toast("删除书籍失败！");
+                        }
+                    });
+        }
+    }
+
     private synchronized void refreshBookshelf() {
         refreshIndex++;
         if (refreshIndex < bookShelfBeans.size()) {

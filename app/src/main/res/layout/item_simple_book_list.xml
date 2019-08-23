@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_recomand_index"
+    android:padding="3dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginBottom="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="14.0sp"
+        android:textColor="@color/colorTitle"
+        android:id="@+id/tv_text"
+        android:layout_width="0.0dip"
+        android:layout_gravity="center_vertical"
+        android:text="xxx的书单"
+        android:layout_marginLeft="4dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0" />
+    <ImageView
+        android:id="@+id/mBookshelfEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_settings_black_24dp"
+        android:scaleType="fitCenter"
+        android:layout_gravity="center_vertical"
+
+        android:contentDescription=""
+        android:layout_marginRight="2dp"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+        android:paddingStart="1dp"
+        android:paddingEnd="1dp" />
+</LinearLayout>

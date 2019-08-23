@@ -41,6 +41,7 @@ public class FindFlowAdapter extends TagAdapter<MyFindKindGroupBean> {
         TextView tv = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_flow_find_item,
                 parent, false);
 
+        tv.setTag(findKindGroupBean.getGroupTag());
         tv.setText(findKindGroupBean.getGroupName());
 
         Random myRandom = new Random();

@@ -91,12 +91,9 @@
                         android:theme="@style/AppTheme.AppBarOverlay.read"
                         app:popupTheme="@style/AppTheme.PopupOverlay.read" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/btn_bg_press" />
 
                     <LinearLayout
+                        android:id="@+id/ll_nav"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -136,11 +133,7 @@
 
                     </LinearLayout>
 
-                    <View
-                        android:id="@+id/atv_line"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/btn_bg_press" />
+                   
 
                 </com.google.android.material.appbar.AppBarLayout>
 

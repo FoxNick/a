@@ -9,10 +9,16 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_list_grid"
+        android:id="@+id/action_flow_leftright"
         android:icon="@drawable/ic_view_quilt"
         app:tint="@color/tv_text_default"
-        android:title="@string/action_list_grid"
+        android:title="@string/action_flow_leftright"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_clear_find_cache"
+        android:icon="@drawable/ic_view_quilt"
+        app:tint="@color/tv_text_default"
+        android:title="清除发现缓存"
         app:showAsAction="never" />
 
 </menu>

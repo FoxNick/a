@@ -30,6 +30,10 @@ public class StyleSelector {
     private TextView tv_label_4;
     private TextView tv_label_5;
     private TextView tv_label_6;
+    private TextView tv_label_7;
+    private TextView tv_label_8;
+    private TextView tv_label_9;
+    private TextView tv_label_10;
 
     private ReadBookControl readBookControl = ReadBookControl.getInstance();
 
@@ -40,9 +44,9 @@ public class StyleSelector {
 
         //----------------------行间距---------------------------//
         MHorProgressBar hpb_read_progress_1 = view.findViewById(R.id.hpb_read_progress_1);
-        hpb_read_progress_1.setMaxProgress(2.0f);
+        hpb_read_progress_1.setMaxProgress(100);
         hpb_read_progress_1.setDurProgress(readBookControl.getLineMultiplier());
-        hpb_read_progress_1.setSpeed(0.1f);
+        hpb_read_progress_1.setSpeed(1);
         tv_label_1 =  view.findViewById(R.id.tv_label_1);
         TextView tv_pre_1 =  view.findViewById(R.id.tv_pre_1);
         TextView tv_next_1 =  view.findViewById(R.id.tv_next_1);
@@ -53,10 +57,10 @@ public class StyleSelector {
             @Override
             public void onClick(View v) {
                 //dialog.dismiss();
-                hpb_read_progress_1.setDurProgress(readBookControl.getLineMultiplier()-0.1f);
+                hpb_read_progress_1.setDurProgress(readBookControl.getLineMultiplier()-1);
 
                 if (thisListener != null) {
-                    thisListener.setLineMultiplier(readBookControl.getLineMultiplier()-0.1f);
+                    thisListener.setLineMultiplier(readBookControl.getLineMultiplier()-1);
                     setTvLable_1();
                 }
             }
@@ -67,9 +71,9 @@ public class StyleSelector {
             @Override
             public void onClick(View v) {
                 //dialog.dismiss();
-                hpb_read_progress_1.setDurProgress(readBookControl.getLineMultiplier()+0.1f);
+                hpb_read_progress_1.setDurProgress(readBookControl.getLineMultiplier()+1);
                 if (thisListener != null) {
-                    thisListener.setLineMultiplier(readBookControl.getLineMultiplier()+0.1f);
+                    thisListener.setLineMultiplier(readBookControl.getLineMultiplier()+1);
                     setTvLable_1();
                 }
             }
@@ -90,7 +94,7 @@ public class StyleSelector {
             @Override
             public void moveStopProgress(float dur) {
                 //float realDur = (float) Math.ceil(dur);
-                String realDurStr = (new java.text.DecimalFormat("#.0").format(dur));
+                String realDurStr = (new java.text.DecimalFormat("#").format(dur));
                 float realDur = Float.parseFloat(realDurStr);
                 if (hpb_read_progress_1.getDurProgress() != realDur)
                     hpb_read_progress_1.setDurProgress(realDur);
@@ -110,9 +114,9 @@ public class StyleSelector {
 
 	//------------------------段间距-------------------------//
 		MHorProgressBar hpb_read_progress_2 = view.findViewById(R.id.hpb_read_progress_2);
-        hpb_read_progress_2.setMaxProgress(3.0f);
+        hpb_read_progress_2.setMaxProgress(200);
         hpb_read_progress_2.setDurProgress(readBookControl.getParagraphSize());
-        hpb_read_progress_2.setSpeed(0.1f);
+        hpb_read_progress_2.setSpeed(1);
         tv_label_2 =  view.findViewById(R.id.tv_label_2);
         TextView tv_pre_2 =  view.findViewById(R.id.tv_pre_2);
         TextView tv_next_2 =  view.findViewById(R.id.tv_next_2);
@@ -123,10 +127,10 @@ public class StyleSelector {
             @Override
             public void onClick(View v) {
                 //dialog.dismiss();
-                hpb_read_progress_2.setDurProgress(readBookControl.getParagraphSize()-0.1f);
+                hpb_read_progress_2.setDurProgress(readBookControl.getParagraphSize()-1);
 
                 if (thisListener != null) {
-                    thisListener.setParagraphSize(readBookControl.getParagraphSize()-0.1f);
+                    thisListener.setParagraphSize(readBookControl.getParagraphSize()-1);
                     setTvLable_2();
                 }
             }
@@ -137,9 +141,9 @@ public class StyleSelector {
             @Override
             public void onClick(View v) {
                 //dialog.dismiss();
-                hpb_read_progress_2.setDurProgress(readBookControl.getParagraphSize()+0.1f);
+                hpb_read_progress_2.setDurProgress(readBookControl.getParagraphSize()+1);
                 if (thisListener != null) {
-                    thisListener.setParagraphSize(readBookControl.getParagraphSize()+0.1f);
+                    thisListener.setParagraphSize(readBookControl.getParagraphSize()+1);
                     setTvLable_2();
                 }
             }
@@ -160,7 +164,7 @@ public class StyleSelector {
             @Override
             public void moveStopProgress(float dur) {
                 //float realDur = (float) Math.ceil(dur);
-                String realDurStr = (new java.text.DecimalFormat("#.0").format(dur));
+                String realDurStr = (new java.text.DecimalFormat("#").format(dur));
                 float realDur = Float.parseFloat(realDurStr);
                 if (hpb_read_progress_2.getDurProgress() != realDur)
                     hpb_read_progress_2.setDurProgress(realDur);
@@ -451,7 +455,283 @@ public class StyleSelector {
             }
         });
 
-	
+
+        //---------------------Tip上边距----------------------------//
+        MHorProgressBar hpb_read_progress_7 = view.findViewById(R.id.hpb_read_progress_7);
+        hpb_read_progress_7.setMaxProgress(50);
+        hpb_read_progress_7.setDurProgress(readBookControl.getTipPaddingTop());
+        hpb_read_progress_7.setSpeed(1);
+        tv_label_7 =  view.findViewById(R.id.tv_label_7);
+        TextView tv_pre_7 =  view.findViewById(R.id.tv_pre_7);
+        TextView tv_next_7 =  view.findViewById(R.id.tv_next_7);
+        setTvLable_7();
+
+        //减
+        tv_pre_7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //dialog.dismiss();
+                hpb_read_progress_7.setDurProgress(readBookControl.getTipPaddingTop()-1);
+
+                if (thisListener != null) {
+                    thisListener.setTipPaddingTop(readBookControl.getTipPaddingTop()-1);
+                    setTvLable_7();
+                }
+            }
+        });
+
+        //加
+        tv_next_7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //dialog.dismiss();
+                hpb_read_progress_7.setDurProgress(readBookControl.getTipPaddingTop()+1);
+                if (thisListener != null) {
+                    thisListener.setTipPaddingTop(readBookControl.getTipPaddingTop()+1);
+                    setTvLable_7();
+                }
+            }
+        });
+
+        //阅读进度
+        hpb_read_progress_7.setProgressListener(new OnProgressListener() {
+            @Override
+            public void moveStartProgress(float dur) {
+
+            }
+
+            @Override
+            public void durProgressChange(float dur) {
+
+            }
+
+            @Override
+            public void moveStopProgress(float dur) {
+                //float realDur = (float) Math.ceil(dur);
+                String realDurStr = (new java.text.DecimalFormat("#00").format(dur));
+                int realDur = Integer.parseInt(realDurStr);
+                if (hpb_read_progress_7.getDurProgress() != realDur)
+                    hpb_read_progress_7.setDurProgress(realDur);
+
+                if (thisListener != null) {
+                    thisListener.setTipPaddingTop(realDur);
+                    setTvLable_7();
+                }
+            }
+
+            @Override
+            public void setDurProgress(float dur) {
+
+            }
+        });
+
+
+        //---------------------Tip下边距----------------------------//
+        MHorProgressBar hpb_read_progress_8 = view.findViewById(R.id.hpb_read_progress_8);
+        hpb_read_progress_8.setMaxProgress(50);
+        hpb_read_progress_8.setDurProgress(readBookControl.getTipPaddingBottom());
+        hpb_read_progress_8.setSpeed(1);
+        tv_label_8 =  view.findViewById(R.id.tv_label_8);
+        TextView tv_pre_8 =  view.findViewById(R.id.tv_pre_8);
+        TextView tv_next_8 =  view.findViewById(R.id.tv_next_8);
+        setTvLable_8();
+
+        //减
+        tv_pre_8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //dialog.dismiss();
+                hpb_read_progress_8.setDurProgress(readBookControl.getTipPaddingBottom()-1);
+
+                if (thisListener != null) {
+                    thisListener.setTipPaddingBottom(readBookControl.getTipPaddingBottom()-1);
+                    setTvLable_8();
+                }
+            }
+        });
+
+        //加
+        tv_next_8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //dialog.dismiss();
+                hpb_read_progress_8.setDurProgress(readBookControl.getTipPaddingBottom()+1);
+                if (thisListener != null) {
+                    thisListener.setTipPaddingBottom(readBookControl.getTipPaddingBottom()+1);
+                    setTvLable_8();
+                }
+            }
+        });
+
+        //阅读进度
+        hpb_read_progress_8.setProgressListener(new OnProgressListener() {
+            @Override
+            public void moveStartProgress(float dur) {
+
+            }
+
+            @Override
+            public void durProgressChange(float dur) {
+
+            }
+
+            @Override
+            public void moveStopProgress(float dur) {
+                //float realDur = (float) Math.ceil(dur);
+                String realDurStr = (new java.text.DecimalFormat("#00").format(dur));
+                int realDur = Integer.parseInt(realDurStr);
+                if (hpb_read_progress_8.getDurProgress() != realDur)
+                    hpb_read_progress_8.setDurProgress(realDur);
+
+                if (thisListener != null) {
+                    thisListener.setTipPaddingBottom(realDur);
+                    setTvLable_8();
+                }
+            }
+
+            @Override
+            public void setDurProgress(float dur) {
+
+            }
+        });
+
+        //---------------------Tip左边距----------------------------//
+        MHorProgressBar hpb_read_progress_9 = view.findViewById(R.id.hpb_read_progress_9);
+        hpb_read_progress_9.setMaxProgress(50);
+        hpb_read_progress_9.setDurProgress(readBookControl.getTipPaddingLeft());
+        hpb_read_progress_9.setSpeed(1);
+        tv_label_9 =  view.findViewById(R.id.tv_label_9);
+        TextView tv_pre_9 =  view.findViewById(R.id.tv_pre_9);
+        TextView tv_next_9 =  view.findViewById(R.id.tv_next_9);
+        setTvLable_9();
+
+        //减
+        tv_pre_9.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //dialog.dismiss();
+                hpb_read_progress_9.setDurProgress(readBookControl.getTipPaddingLeft()-1);
+
+                if (thisListener != null) {
+                    thisListener.setTipPaddingLeft(readBookControl.getTipPaddingLeft()-1);
+                    setTvLable_9();
+                }
+            }
+        });
+
+        //加
+        tv_next_9.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //dialog.dismiss();
+                hpb_read_progress_9.setDurProgress(readBookControl.getTipPaddingLeft()+1);
+                if (thisListener != null) {
+                    thisListener.setTipPaddingLeft(readBookControl.getTipPaddingLeft()+1);
+                    setTvLable_9();
+                }
+            }
+        });
+
+        //阅读进度
+        hpb_read_progress_9.setProgressListener(new OnProgressListener() {
+            @Override
+            public void moveStartProgress(float dur) {
+
+            }
+
+            @Override
+            public void durProgressChange(float dur) {
+
+            }
+
+            @Override
+            public void moveStopProgress(float dur) {
+                //float realDur = (float) Math.ceil(dur);
+                String realDurStr = (new java.text.DecimalFormat("#00").format(dur));
+                int realDur = Integer.parseInt(realDurStr);
+                if (hpb_read_progress_9.getDurProgress() != realDur)
+                    hpb_read_progress_9.setDurProgress(realDur);
+
+                if (thisListener != null) {
+                    thisListener.setTipPaddingLeft(realDur);
+                    setTvLable_9();
+                }
+            }
+
+            @Override
+            public void setDurProgress(float dur) {
+
+            }
+        });
+
+        //---------------------Tip右边距----------------------------//
+        MHorProgressBar hpb_read_progress_10 = view.findViewById(R.id.hpb_read_progress_10);
+        hpb_read_progress_10.setMaxProgress(50);
+        hpb_read_progress_10.setDurProgress(readBookControl.getTipPaddingRight());
+        hpb_read_progress_10.setSpeed(1);
+        tv_label_10 =  view.findViewById(R.id.tv_label_10);
+        TextView tv_pre_10 =  view.findViewById(R.id.tv_pre_10);
+        TextView tv_next_10 =  view.findViewById(R.id.tv_next_10);
+        setTvLable_10();
+
+        //减
+        tv_pre_10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //dialog.dismiss();
+                hpb_read_progress_10.setDurProgress(readBookControl.getTipPaddingRight()-1);
+
+                if (thisListener != null) {
+                    thisListener.setTipPaddingRight(readBookControl.getTipPaddingRight()-1);
+                    setTvLable_10();
+                }
+            }
+        });
+
+        //加
+        tv_next_10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //dialog.dismiss();
+                hpb_read_progress_10.setDurProgress(readBookControl.getTipPaddingRight()+1);
+                if (thisListener != null) {
+                    thisListener.setTipPaddingRight(readBookControl.getTipPaddingRight()+1);
+                    setTvLable_10();
+                }
+            }
+        });
+
+        //阅读进度
+        hpb_read_progress_10.setProgressListener(new OnProgressListener() {
+            @Override
+            public void moveStartProgress(float dur) {
+
+            }
+
+            @Override
+            public void durProgressChange(float dur) {
+
+            }
+
+            @Override
+            public void moveStopProgress(float dur) {
+                //float realDur = (float) Math.ceil(dur);
+                String realDurStr = (new java.text.DecimalFormat("#00").format(dur));
+                int realDur = Integer.parseInt(realDurStr);
+                if (hpb_read_progress_10.getDurProgress() != realDur)
+                    hpb_read_progress_10.setDurProgress(realDur);
+
+                if (thisListener != null) {
+                    thisListener.setTipPaddingRight(realDur);
+                    setTvLable_10();
+                }
+            }
+
+            @Override
+            public void setDurProgress(float dur) {
+
+            }
+        });
 
         builder.setView(view);
         builder.setTitle(R.string.select_style);
@@ -462,39 +742,64 @@ public class StyleSelector {
 
     private void setTvLable_1(){
         float dur = readBookControl.getLineMultiplier();
-        String realDurStr = (new java.text.DecimalFormat("#0.0").format(dur));
+        String realDurStr = (new java.text.DecimalFormat("#00").format(dur));
         tv_label_1.setText("行间距("+realDurStr+"):");
     }
 
     private void setTvLable_2(){
         float dur = readBookControl.getParagraphSize();
-        String realDurStr = (new java.text.DecimalFormat("#0.0").format(dur));
+        String realDurStr = (new java.text.DecimalFormat("#00").format(dur));
         tv_label_2.setText("段间距("+realDurStr+"):");
     }
 
-        private void setTvLable_3(){
+    private void setTvLable_3(){
         float dur = readBookControl.getPaddingTop();
         String realDurStr = (new java.text.DecimalFormat("#00").format(dur));
         tv_label_3.setText("上边距("+realDurStr+"):");
     }
 
-        private void setTvLable_4(){
+    private void setTvLable_4(){
         float dur = readBookControl.getPaddingBottom();
         String realDurStr = (new java.text.DecimalFormat("#00").format(dur));
         tv_label_4.setText("下边距("+realDurStr+"):");
     }
 
-        private void setTvLable_5(){
+    private void setTvLable_5(){
         float dur = readBookControl.getPaddingLeft();
         String realDurStr = (new java.text.DecimalFormat("#00").format(dur));
         tv_label_5.setText("左边距("+realDurStr+"):");
     }
 
-        private void setTvLable_6(){
+    private void setTvLable_6(){
         float dur = readBookControl.getPaddingRight();
         String realDurStr = (new java.text.DecimalFormat("#00").format(dur));
         tv_label_6.setText("右边距("+realDurStr+"):");
     }
+
+    private void setTvLable_7(){
+        float dur = readBookControl.getTipPaddingTop();
+        String realDurStr = (new java.text.DecimalFormat("#00").format(dur));
+        tv_label_7.setText("Tip上边距("+realDurStr+"):");
+    }
+
+    private void setTvLable_8(){
+        float dur = readBookControl.getTipPaddingBottom();
+        String realDurStr = (new java.text.DecimalFormat("#00").format(dur));
+        tv_label_8.setText("Tip下边距("+realDurStr+"):");
+    }
+
+    private void setTvLable_9(){
+        float dur = readBookControl.getTipPaddingLeft();
+        String realDurStr = (new java.text.DecimalFormat("#00").format(dur));
+        tv_label_9.setText("Tip左边距("+realDurStr+"):");
+    }
+
+    private void setTvLable_10(){
+        float dur = readBookControl.getTipPaddingRight();
+        String realDurStr = (new java.text.DecimalFormat("#00").format(dur));
+        tv_label_10.setText("Tip右边距("+realDurStr+"):");
+    }
+
     public StyleSelector setListener(OnThisListener thisListener) {
         this.thisListener = thisListener;
         //builder.setPositiveButton(R.string.default_style, ((dialogInterface, i) -> thisListener.setDefault()));
@@ -540,6 +845,14 @@ public class StyleSelector {
         void setPaddingLeft(int number);
 
         void setPaddingRight(int number);
+
+        void setTipPaddingTop(int number);
+
+        void setTipPaddingBottom(int number);
+
+        void setTipPaddingLeft(int number);
+
+        void setTipPaddingRight(int number);
 
     }
 }

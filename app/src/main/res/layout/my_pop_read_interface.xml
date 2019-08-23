@@ -141,7 +141,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="自定义字体"
+                android:text="正文字体"
                 android:layout_gravity="center"
                 android:textColor="#ffbbbbbb"
                 android:textSize="14.0dip"/>
@@ -160,7 +160,7 @@
             android:layout_marginTop="4.0dip"
             android:layout_marginBottom="4.0dip"
             android:layout_marginRight="4.0dip"
-            android:layout_weight="50.0"
+            android:layout_weight="60.0"
             android:background="@drawable/selector_pop_font_bg">
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="36sp"
@@ -184,7 +184,7 @@
             android:layout_marginTop="4.0dip"
             android:layout_marginBottom="4.0dip"
             android:layout_marginRight="4.0dip"
-            android:layout_weight="50.0"
+            android:layout_weight="60.0"
             android:background="@drawable/selector_pop_font_bg">
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="36sp"
@@ -208,7 +208,7 @@
             android:layout_marginTop="4.0dip"
             android:layout_marginBottom="4.0dip"
             android:layout_marginRight="4.0dip"
-            android:layout_weight="50.0"
+            android:layout_weight="60.0"
             android:background="@drawable/selector_pop_font_bg">
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="36sp"
@@ -232,7 +232,7 @@
             android:layout_marginTop="4.0dip"
             android:layout_marginBottom="4.0dip"
             android:layout_marginRight="4.0dip"
-            android:layout_weight="50.0"
+            android:layout_weight="60.0"
             android:background="@drawable/selector_pop_font_bg">
             <TextView
                 android:layout_width="wrap_content"
@@ -244,6 +244,27 @@
 
         </FrameLayout>
 
+        <FrameLayout
+            android:id="@+id/fl_indent"
+            android:paddingLeft="4.0dip"
+            android:paddingRight="4.0dip"
+            android:layout_width="fill_parent"
+            android:layout_height="32.0dip"
+            android:layout_marginLeft="14.0dip"
+            android:layout_marginTop="4.0dip"
+            android:layout_marginBottom="4.0dip"
+            android:layout_marginRight="4.0dip"
+            android:layout_weight="57.0"
+            android:background="@drawable/selector_pop_font_bg">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="缩进"
+                android:layout_gravity="center"
+                android:textColor="#ffbbbbbb"
+                android:textSize="14.0dip"/>
+
+        </FrameLayout>
 
         <FrameLayout
             android:id="@+id/fl_moreStyle"
@@ -258,14 +279,14 @@
             android:layout_marginTop="4.0dip"
             android:layout_marginBottom="4.0dip"
             android:layout_marginRight="4.0dip"
-            android:layout_weight="40.0"
+            android:layout_weight="55.0"
             android:background="@drawable/selector_pop_font_bg">
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="自定义排版"
+                android:text="自定义"
                 android:layout_gravity="center"
                 android:textColor="#ffbbbbbb"
                 android:textSize="14.0dip"/>
@@ -435,7 +456,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="自定义配色"
+                android:text="自定义"
                 android:layout_gravity="center"
                 android:textColor="#ffbbbbbb"
                 android:textSize="14.0dip"/>
@@ -443,7 +464,7 @@
 
     </LinearLayout>
 
-    <LinearLayout android:paddingLeft="12.0dip" android:paddingRight="12.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="18.0dip" android:layout_marginBottom="15.0dip">
+    <LinearLayout android:paddingLeft="12.0dip" android:paddingRight="12.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="18.0dip" android:layout_marginBottom="0.0dip">
         <FrameLayout
             android:id="@+id/fl_page1"
             android:paddingLeft="4.0dip"
@@ -533,12 +554,171 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="自定义翻页"
+                android:text="自定义"
                 android:layout_gravity="center"
                 android:textColor="#ffbbbbbb"
                 android:textSize="14.0dip"/>
 
         </FrameLayout>
+
+    </LinearLayout>
+
+    <LinearLayout android:paddingLeft="12.0dip"
+        android:paddingRight="12.0dip"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18.0dip"
+        android:background="#353535"
+        android:layout_marginBottom="0.0dip">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="章节标题："
+            android:layout_gravity="center"
+            android:textColor="#ffbbbbbb"
+            android:textSize="14.0dip"/>
+
+        <FrameLayout
+            android:id="@+id/fl_chapter_top"
+
+            android:layout_width="fill_parent"
+            android:layout_height="32.0dip"
+            android:layout_marginLeft="0.0dip"
+            android:layout_marginTop="4.0dip"
+            android:layout_marginRight="0.0dip"
+            android:layout_marginBottom="4.0dip"
+
+            android:layout_weight="55.0"
+            android:background="@drawable/selector_pop_font_bg">
+            <TextView
+                android:id="@+id/tv_chapter_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上"
+                android:layout_gravity="center"
+                android:textColor="#ffbbbbbb"
+                android:textSize="14.0dip"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_chapter_buttom"
+
+            android:layout_width="fill_parent"
+            android:layout_height="32.0dip"
+            android:layout_marginLeft="10.0dip"
+            android:layout_marginTop="4.0dip"
+            android:layout_marginRight="6.0dip"
+            android:layout_marginBottom="4.0dip"
+            android:layout_weight="55.0"
+            android:background="@drawable/selector_pop_font_bg">
+            <TextView
+                android:id="@+id/tv_chapter_buttom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="下"
+                android:layout_gravity="center"
+                android:textColor="#ffbbbbbb"
+                android:textSize="14.0dip"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_chapter_size"
+
+            android:layout_width="fill_parent"
+            android:layout_height="32.0dip"
+            android:layout_marginLeft="10.0dip"
+            android:layout_marginTop="4.0dip"
+            android:layout_marginRight="6.0dip"
+            android:layout_marginBottom="4.0dip"
+            android:layout_weight="55.0"
+            android:background="@drawable/selector_pop_font_bg">
+            <TextView
+                android:id="@+id/tv_chapter_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="字"
+                android:layout_gravity="center"
+                android:textColor="#ffbbbbbb"
+                android:textSize="14.0dip"/>
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:id="@+id/fl_chapter_font"
+
+
+
+            android:paddingLeft="4.0dip"
+            android:paddingRight="4.0dip"
+            android:layout_width="fill_parent"
+            android:layout_height="32.0dip"
+            android:layout_marginLeft="14.0dip"
+            android:layout_marginTop="4.0dip"
+            android:layout_marginBottom="4.0dip"
+            android:layout_marginRight="4.0dip"
+            android:layout_weight="55.0"
+            android:background="@drawable/selector_pop_font_bg">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="字体"
+                android:layout_gravity="center"
+                android:textColor="#ffbbbbbb"
+                android:textSize="14.0dip"/>
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout android:paddingLeft="12.0dip" android:paddingRight="12.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="18.0dip" android:layout_marginBottom="15.0dip">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="样式影响范围："
+            android:layout_gravity="center"
+            android:textColor="#ffbbbbbb"
+            android:textSize="14.0dip"/>
+
+            <com.kunfei.bookshelf.widget.views.ATECheckBox
+                android:id="@+id/cb_this_book"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:theme="@style/MyCheckBox"
+                android:text="本书"
+                android:layout_gravity="bottom|right"
+                android:textColor="#ffbbbbbb"
+            />
+
+        <com.kunfei.bookshelf.widget.views.ATECheckBox
+            android:id="@+id/cb_this_source"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:theme="@style/MyCheckBox"
+            android:visibility="gone"
+            android:text="所在书源"
+            android:layout_gravity="bottom|right"
+            android:textColor="#ffbbbbbb"
+            />
+
+
+            <com.kunfei.bookshelf.widget.views.ATECheckBox
+                android:id="@+id/cb_this_app"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:theme="@style/MyCheckBox"
+                android:visibility="gone"
+                android:text="全局"
+                android:layout_gravity="bottom|right"
+                android:textColor="#ffbbbbbb"
+ />
+
+
+
 
     </LinearLayout>
 

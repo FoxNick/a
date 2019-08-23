@@ -13,7 +13,9 @@ import com.kunfei.bookshelf.bean.SearchBookBean;
 import com.kunfei.bookshelf.presenter.ReadBookPresenter;
 import com.kunfei.bookshelf.service.ReadAloudService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface ReadBookContract {
     interface View extends IView {
@@ -29,6 +31,8 @@ public interface ReadBookContract {
         void startLoadingBook();
 
         void upMenu();
+
+        void upBook(HashMap m);
 
         void openBookFromOther();
 
@@ -90,10 +94,18 @@ public interface ReadBookContract {
 
         void saveBookmark(BookmarkBean bookmarkBean);
 
+        void saveBookSpecStyle( Map<String,String> bookSpecStyle);
+
+        void updateBookSpecStyle(HashMap bookSpecStyle);
+
+        void clearCaches(BookShelfBean bookShelf);
+
         void delBookmark(BookmarkBean bookmarkBean);
 
         void disableDurBookSource();
 
         BookSourceBean getBookSource();
+
+        void upBookSource();
     }
 }

@@ -13,7 +13,7 @@
         android:id="@+id/resultRecyclerview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/background_content"
+        android:background="@color/transparent"
         android:layout_weight="5.0" />
 
 
@@ -95,9 +95,10 @@
 
         <com.kunfei.bookshelf.widget.recycler.refresh.RefreshRecyclerView
             android:id="@+id/rfRv_search_books"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/background_content"
+            android:background="@color/transparent"
             app:font_color="#767676"
             app:second_color="#c1c1c1"
             app:second_max_progress="80dp"

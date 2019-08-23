@@ -6,6 +6,7 @@
     <string name="bookshelf_empty">书架还空着，先去添加吧！</string>
     <string name="action_download">下载任务</string>
     <string name="action_list_grid">列表/网格</string>
+    <string name="action_flow_leftright">瀑布/左右</string>
     <string name="book_local">添加本地</string>
     <string name="book_source_manage">书源管理</string>
     <string name="setting">设置</string>
@@ -27,6 +28,7 @@
     <string name="get_data_error">获取数据失败！</string>
     <string name="retry">重试</string>
     <string name="web_service">web服务</string>
+    <string name="download">下载</string>
     <string name="download_offline">离线下载</string>
     <string name="download_offline_t">离线下载</string>
     <string name="download_offline_s">下载选择的章节到本地</string>
@@ -38,6 +40,7 @@
     <string name="backup">备份</string>
     <string name="restore">恢复</string>
     <string name="lab">实验室</string>
+    <string name="simple_portal">简洁入口</string>
     <string name="backup_permission">备份请给与存储权限</string>
     <string name="restore_permission">恢复请给与存储权限</string>
     <string name="ok">确认</string>
@@ -124,6 +127,8 @@
     <string name="bookshelf_show">书架进度显示</string>
     <string name="bookshelf_show_0">显示更新提示</string>
     <string name="bookshelf_show_1">显示进度条</string>
+    <string name="bookshelf_space_summary">当前书架间隔 %s</string>
+    <string name="update_bookshelf_space">更新书架间隔</string>
     <string name="del_select">删除所选</string>
     <string name="del_msg">是否确认删除?</string>
     <string name="clear_font">默认字体</string>
@@ -343,7 +348,7 @@
     <string name="progress_display">进度显示</string>
     <string name="display_chapter">显示章节</string>
     <string name="display_percnet">显示百分比</string>
-
+    <string name="display_no">不显示进度</string>
 
     <string name="pref_title_check_update">检查更新</string>
 
@@ -385,5 +390,13 @@
 
     <string name="dsm_start"><![CDATA[<]]></string>
     <string name="dsm_end"><![CDATA[>]]></string>
+
+
+    <string name="indent">缩进</string>
+    <string name="indent_0">无缩进</string>
+    <string name="indent_1">一字符缩进</string>
+    <string name="indent_2">二字符缩进</string>
+    <string name="indent_3">三字符缩进</string>
+    <string name="indent_4">四字符缩进</string>
 
 </resources>

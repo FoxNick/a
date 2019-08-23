@@ -97,7 +97,7 @@ public class ChapterListFragment extends MBaseFragment {
         unbinder = ButterKnife.bind(this, view);
         rvList.setLayoutManager(layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, isChapterReverse));
         rvList.setItemAnimator(null);
-        chapterListAdapter = new ChapterListAdapter(bookShelf, chapterBeanList, (index, page) -> {
+        chapterListAdapter = new ChapterListAdapter(getContext(),bookShelf, chapterBeanList, (index, page) -> {
             if (index != bookShelf.getDurChapter()) {
                 RxBus.get().post(RxBusTag.SKIP_TO_CHAPTER, new OpenChapterBean(index, page));
             }

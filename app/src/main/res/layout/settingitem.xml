@@ -73,7 +73,7 @@
 </RelativeLayout>
 
     <TextView
-        android:layout_marginTop="-10dp"
+        android:layout_marginTop="-15dp"
         android:ellipsize="end"
         android:id="@+id/tv_intro"
         android:gravity="center_vertical"

@@ -21,6 +21,8 @@ import com.kunfei.bookshelf.bean.BookShelfBean;
 import com.kunfei.bookshelf.bean.BookSourceBean;
 import com.kunfei.bookshelf.bean.SearchHistoryBean;
 import com.kunfei.bookshelf.constant.RxBusTag;
+import com.kunfei.bookshelf.dao.BookInfoBeanDao;
+import com.kunfei.bookshelf.dao.BookShelfBeanDao;
 import com.kunfei.bookshelf.dao.BookSourceBeanDao;
 import com.kunfei.bookshelf.dao.SearchHistoryBeanDao;
 import com.kunfei.bookshelf.help.BookshelfHelp;
@@ -28,7 +30,6 @@ import com.kunfei.bookshelf.help.DataBackup;
 import com.kunfei.bookshelf.help.DataRestore;
 import com.kunfei.bookshelf.model.WebBookModel;
 import com.kunfei.bookshelf.model.analyzeRule.AnalyzeUrl;
-import com.kunfei.bookshelf.presenter.contract.MainContract;
 import com.kunfei.bookshelf.presenter.contract.MyMainContract;
 import com.kunfei.bookshelf.utils.GsonUtils;
 import com.kunfei.bookshelf.utils.RxUtils;
@@ -258,8 +259,13 @@ public class MyMainPresenter extends BasePresenterImpl<MyMainContract.View> impl
                     .queryBuilder()
                     .where(SearchHistoryBeanDao.Properties.Type.eq(BOOK), SearchHistoryBeanDao.Properties.Content.like("%" + content + "%"))
                     .orderDesc(SearchHistoryBeanDao.Properties.Date)
-                    .limit(50)
+                    .limit(10)
                     .build().list();
+
+
+            //查询发现
+
+
             e.onNext(data);
         }).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

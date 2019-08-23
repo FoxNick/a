@@ -16,8 +16,8 @@ android {
     signingConfigs {
         myConfig {
             Properties properties = new Properties()
-            InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream() ;
-            properties.load( inputStream )
+            InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream();
+            properties.load(inputStream)
 
             storeFile file(properties["storeFile"])
             storePassword properties["storePassword"]
@@ -27,17 +27,32 @@ android {
     }
 
 
-
     defaultConfig {
         applicationId "com.monke.monkeybook9527"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 1047
-        versionName "1.0.47"
+       // versionCode 1055
+       // versionName "1.0.55r11"
+        //手机版本号正常增长
+        versionCode 1056
+        versionName "1.0.56"
+
         project.ext.set("archivesBaseName", name + "_" + version)
         multiDexEnabled true
         resConfigs "zh"
         flavorDimensions "versionCode"
+    }
+
+    //多包名设置
+    productFlavors {
+       phone {
+      }
+
+     //  eink {
+      //  }
+
+
+
     }
 
     lintOptions {
@@ -70,6 +85,7 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.appcompat:appcompat:1.0.2'
     testImplementation 'junit:junit:4.13-beta-3'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':basemvplib')
@@ -80,15 +96,14 @@ dependencies {
 
     //androidX
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.media:media:1.1.0-beta01'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    //implementation 'androidx.media:media:1.1.0-beta01'
+    //implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     //google
     implementation 'com.google.android.material:material:1.1.0-alpha07'
     implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.google.android:flexbox:1.1.0'
 
     //J_SOUP
     implementation 'org.jsoup:jsoup:1.12.1'
@@ -113,10 +128,6 @@ dependencies {
     implementation 'com.jakewharton:butterknife:10.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
 
-    //webServer
-    implementation 'org.nanohttpd:nanohttpd:2.3.1'
-    implementation 'org.nanohttpd:nanohttpd-websocket:2.3.1'
-
     //动画
     implementation 'com.victor:lib:1.0.4'
 
@@ -126,8 +137,6 @@ dependencies {
     //颜色选择
     implementation 'com.jaredrummler:colorpicker:1.1.0'
 
-    //文件目录选择
-    implementation 'com.github.gedoor.AndroidPicker:FilePicker:2.0.0'
 
     //简繁转换
     implementation 'com.luhuiguo:chinese-utils:1.0'
@@ -135,8 +144,6 @@ dependencies {
     //字符串比较
     implementation 'net.ricecode:string-similarity:1.0.0'
 
-    //MarkDown
-    implementation 'ru.noties.markwon:core:3.0.1'
 
     //epub
     implementation('nl.siegmann.epublib:epublib-core:3.1') {
@@ -157,13 +164,21 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.bartoszlipinski:viewpropertyobjectanimator:1.2.0'
 
+    //MarkDown
+    implementation 'ru.noties.markwon:core:3.0.2'
+
+   //einkImplementation ('com.mikepenz:materialdrawer:5.9.3@aar') {
+    //    transitive = true
+    //  exclude group: 'com.android.support'
+  // }
 
 }
 
 greendao {
-    schemaVersion 63
+    schemaVersion 68
     daoPackage 'com.kunfei.bookshelf.dao'
     targetGenDir 'src/main/java'
 }
 
 //apply plugin: 'com.google.gms.google-services'
+

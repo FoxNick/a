@@ -137,13 +137,19 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         if (key.equals(getString(R.string.pk_ImmersionStatusBar)) || key.equals(getString(R.string.pk_navigationBarColorChange))) {
             settingActivity.initImmersionBar();
             RxBus.get().post(RxBusTag.IMMERSION_CHANGE, true);
-        } else if (key.equals(getString(R.string.pk_bookshelf_px))) {
-            RxBus.get().post(RxBusTag.UPDATE_PX, true);
+        } else if (key.equals(getString(R.string.pk_bookshelf_px))
+                || key.equals(getString(R.string.pk_bookshelf_show))) {
+            RxBus.get().post(RxBusTag.REFRESH_BOOK_LIST, true);
+        }else if (key.equals(getString(R.string.pk_bookshelf_space))) {
+            RxBus.get().post(RxBusTag.RECREATE, true);
         }else if (key.equals("showAllFind")) {
             RxBus.get().post(RxBusTag.UPDATE_BOOK_SOURCE, true);
         }else  if (key.equals(getString(R.string.pk_bookshelf_show))) {
             RxBus.get().post(RxBusTag.UPDATE_BOOK_SOURCE, false);
         }
+
+
+
     }
 
     @Override

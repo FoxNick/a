@@ -1,7 +1,6 @@
 package com.kunfei.bookshelf.model.analyzeRule;
 
 import android.annotation.SuppressLint;
-import android.text.TextUtils;
 
 import androidx.annotation.Keep;
 
@@ -65,6 +64,10 @@ public class AnalyzeRule {
         return setContent(body, baseUrl);
     }
 
+    public Object getContent() {
+        return object;
+    }
+
     public AnalyzeRule setContent(Object body, String baseUrl) {
         if (body == null) throw new AssertionError("Content cannot be null");
         isJSON = StringUtils.isJsonType(String.valueOf(body));
@@ -78,7 +81,7 @@ public class AnalyzeRule {
         return this;
     }
 
-    public String getBaseUrl(){
+    public String getBaseUrl() {
         return this.baseUrl;
     }
 
@@ -99,10 +102,6 @@ public class AnalyzeRule {
             objectChangedXP = false;
         }
         return analyzeByXPath;
-    }
-
-    public Object getContent() {
-        return object;
     }
 
     /**
@@ -164,7 +163,6 @@ public class AnalyzeRule {
             if (!isEmpty(rule.rule)) {
                 switch (rule.mode) {
                     case Js:
-                        if (result == null) result = object;
                         result = evalJS(rule.rule, result);
                         break;
                     case JSon:
@@ -176,25 +174,15 @@ public class AnalyzeRule {
                     default:
                         result = getAnalyzeByJSoup(result).getStringList(rule.rule);
                 }
-                if (!isEmpty(rule.replaceRegex) && result instanceof List) {
-                    List<String> newList = new ArrayList<>();
-                    for (Object item : (List) result) {
-                        newList.add(replaceRegex(String.valueOf(item), rule));
-                    }
-                    result = newList;
-                } else if (!isEmpty(rule.replaceRegex)) {
-                    result = replaceRegex(String.valueOf(result), rule);
+            }
+            if (!isEmpty(rule.replaceRegex) && result instanceof List) {
+                List<String> newList = new ArrayList<>();
+                for (Object item : (List) result) {
+                    newList.add(replaceRegex(String.valueOf(item), rule));
                 }
-            } else {
-                if (!isEmpty(rule.replaceRegex) && result instanceof List) {
-                    List<String> newList = new ArrayList<>();
-                    for (Object item : (List) result) {
-                        newList.add(replaceRegex(String.valueOf(item), rule));
-                    }
-                    result = newList;
-                } else if (!isEmpty(rule.replaceRegex)) {
-                    result = replaceRegex(String.valueOf(result), rule);
-                }
+                result = newList;
+            } else if (!isEmpty(rule.replaceRegex)) {
+                result = replaceRegex(String.valueOf(result), rule);
             }
         }
         if (result == null) return new ArrayList<>();
@@ -203,9 +191,9 @@ public class AnalyzeRule {
         }
         if (isUrl && !isEmpty(baseUrl)) {
             List<String> urlList = new ArrayList<>();
-            for (Object url : (List<Object>) result) {
+            for (Object url : (List) result) {
                 String absoluteURL = NetworkUtils.getAbsoluteURL(baseUrl, String.valueOf(url));
-                if (!urlList.contains(absoluteURL)) {
+                if (!urlList.contains(absoluteURL) && !isEmpty(absoluteURL)) {
                     urlList.add(absoluteURL);
                 }
             }
@@ -238,7 +226,6 @@ public class AnalyzeRule {
             if (!StringUtils.isTrimEmpty(rule.rule)) {
                 switch (rule.mode) {
                     case Js:
-                        if (result == null) result = object;
                         result = evalJS(rule.rule, result);
                         break;
                     case JSon:
@@ -251,23 +238,17 @@ public class AnalyzeRule {
                         if (isUrl && !isEmpty(baseUrl)) {
                             result = getAnalyzeByJSoup(result).getString0(rule.rule);
                         } else {
-
                             if(rule.rule.startsWith("~")) {//此标志处理非段落换行
                                 rule.rule = rule.rule.substring(1);
                                 result = getAnalyzeByJSoup(result).getStringTP(rule.rule);
 
-                            }else{
-
+                            }else {
                                 result = getAnalyzeByJSoup(result).getString(rule.rule);
                             }
-
-
                         }
                 }
-                if (!isEmpty(rule.replaceRegex) && result instanceof String) {
-                    result = replaceRegex(String.valueOf(result), rule);
-                }
-            } else if (!isEmpty(rule.replaceRegex)) {
+            }
+            if (!isEmpty(rule.replaceRegex)) {
                 result = replaceRegex(String.valueOf(result), rule);
             }
         }
@@ -282,13 +263,11 @@ public class AnalyzeRule {
      * 获取Element
      */
     public Object getElement(String ruleStr) throws Exception {
-        if (isEmpty(ruleStr)) return null;
-        Object result = object;
         List<SourceRule> ruleList = splitSourceRule(ruleStr);
+        Object result = object;
         for (SourceRule rule : ruleList) {
             switch (rule.mode) {
                 case Js:
-                    if (result == null) result = object;
                     result = evalJS(rule.rule, result);
                     break;
                 case JSon:
@@ -318,7 +297,6 @@ public class AnalyzeRule {
         for (SourceRule rule : ruleList) {
             switch (rule.mode) {
                 case Js:
-                    if (result == null) result = object;
                     result = evalJS(rule.rule, result);
                     break;
                 case JSon:
@@ -337,6 +315,7 @@ public class AnalyzeRule {
         if (result == null) {
             return new ArrayList<>();
         }
+        //noinspection ConstantConditions
         return (List<Object>) result;
     }
 
@@ -380,7 +359,6 @@ public class AnalyzeRule {
         return ruleStr;
     }
 
-
     /**
      * 正则替换
      */
@@ -400,7 +378,6 @@ public class AnalyzeRule {
         }
         return result;
     }
-
 
     /**
      * 替换JS

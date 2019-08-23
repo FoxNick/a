@@ -9,9 +9,13 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.hwangjr.rxbus.RxBus;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
@@ -24,6 +28,7 @@ import com.kunfei.bookshelf.base.observer.MyObserver;
 import com.kunfei.bookshelf.bean.BookChapterBean;
 import com.kunfei.bookshelf.bean.BookShelfBean;
 import com.kunfei.bookshelf.bean.BookSourceBean;
+import com.kunfei.bookshelf.bean.BookSpecStyleBean;
 import com.kunfei.bookshelf.bean.BookmarkBean;
 import com.kunfei.bookshelf.bean.DownloadBookBean;
 import com.kunfei.bookshelf.bean.LocBookShelfBean;
@@ -31,22 +36,30 @@ import com.kunfei.bookshelf.bean.OpenChapterBean;
 import com.kunfei.bookshelf.bean.SearchBookBean;
 import com.kunfei.bookshelf.bean.TwoDataBean;
 import com.kunfei.bookshelf.constant.RxBusTag;
+import com.kunfei.bookshelf.dao.BookSourceBeanDao;
+import com.kunfei.bookshelf.dao.BookSpecStyleBeanDao;
 import com.kunfei.bookshelf.help.BookshelfHelp;
 import com.kunfei.bookshelf.help.ChangeSourceHelp;
+import com.kunfei.bookshelf.help.ReadBookControl;
 import com.kunfei.bookshelf.model.BookSourceManager;
 import com.kunfei.bookshelf.model.ImportBookModel;
 import com.kunfei.bookshelf.model.SavedSource;
 import com.kunfei.bookshelf.presenter.contract.ReadBookContract;
 import com.kunfei.bookshelf.service.DownloadService;
 import com.kunfei.bookshelf.service.ReadAloudService;
+import com.kunfei.bookshelf.utils.GsonUtils;
+import com.kunfei.bookshelf.utils.RxUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static android.text.TextUtils.isEmpty;
@@ -60,6 +73,8 @@ public class ReadBookPresenter extends BasePresenterImpl<ReadBookContract.View> 
     private ChangeSourceHelp changeSourceHelp;
     private List<BookChapterBean> chapterBeanList = new ArrayList<>();
 
+    private ReadBookControl readBookControl = ReadBookControl.getInstance();
+
     @Override
     public void initData(Activity activity) {
         mView.showLoading("");
@@ -67,6 +82,9 @@ public class ReadBookPresenter extends BasePresenterImpl<ReadBookContract.View> 
         int open_from = intent.getData() != null ? OPEN_FROM_OTHER : OPEN_FROM_APP;
         open_from = intent.getIntExtra("openFrom", open_from);
         mView.setAdd(intent.getBooleanExtra("inBookshelf", true));
+
+        //
+        //
         if (open_from == OPEN_FROM_APP) {
             loadBook(intent);
         } else {
@@ -108,6 +126,22 @@ public class ReadBookPresenter extends BasePresenterImpl<ReadBookContract.View> 
             //if (bookShelf != null) {
             //    mView.setAdd(BookshelfHelp.isInBookShelf(bookShelf.getNoteUrl()));
             //}
+
+            BookSpecStyleBean bbs = getBookSpecStyle(bookShelf.getBookInfoBean().getName(),bookShelf.getBookInfoBean().getAuthor());
+            if(bbs!=null && !isEmpty(bbs.getStyleJson())) {
+              // mView.upBook(GsonUtils.parseJObject(bbs.getStyleJson(), HashMap.class));
+
+               // Map<String,String> jsonMap = new Gson().fromJson(str,new TypeToken<Map<String,String>>(){}.getType());
+
+                //new TypeToken<Map<String,String>>(){}.getType();
+                //TypeToken<Map<String,String>> aa= GsonUtils.parseJObject(bbs.getStyleJson(), new TypeToken<Map<String,String>>(){}.getType());
+
+
+                Map<String,String> jsonMap = new Gson().fromJson(bbs.getStyleJson(),new TypeToken<Map<String,String>>(){}.getType());
+
+                readBookControl.setBookSpecStyle(jsonMap);
+            }
+
             e.onNext(bookShelf);
             e.onComplete();
         }).subscribeOn(Schedulers.io())
@@ -118,6 +152,7 @@ public class ReadBookPresenter extends BasePresenterImpl<ReadBookContract.View> 
                         if (bookShelf == null || isEmpty(bookShelf.getBookInfoBean().getName())) {
                             mView.finish();
                         } else {
+
                             mView.startLoadingBook();
                             mView.upMenu();
                         }
@@ -128,6 +163,99 @@ public class ReadBookPresenter extends BasePresenterImpl<ReadBookContract.View> 
                         mView.finish();
                     }
                 });
+    }
+
+    @Override
+    public void clearCaches(BookShelfBean bookShelf) {
+        if (bookShelf != null) {
+            Observable.create((ObservableOnSubscribe<Boolean>) e -> {
+                BookshelfHelp.clearCaches(bookShelf);
+                e.onNext(true);
+                e.onComplete();
+            }).compose(RxUtils::toSimpleSingle)
+                    .subscribe(new MyObserver<Boolean>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(Boolean value) {
+                            if (value) {
+                                mView.toast("清除书籍缓存成功！");
+                            } else {
+                                mView.toast("清除书籍缓存失败！");
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            mView.toast("清除书籍缓存失败！");
+                        }
+                    });
+        }
+    }
+    @Override
+    public void saveBookSpecStyle( Map<String,String> bookSpecStyle) {
+
+        //查询是否存在特定样式
+        BookSpecStyleBean m = getBookSpecStyle(bookShelf.getBookInfoBean().getName(), bookShelf.getBookInfoBean().getAuthor());
+
+        if(bookSpecStyle!=null) {
+            if (m != null) {//存在则修改
+
+                m.setStyleJson(GsonUtils.toJsonWithSerializeNulls(bookSpecStyle));
+                DbHelper.getDaoSession().getBookSpecStyleBeanDao().update(m);
+
+            } else {
+
+                BookSpecStyleBean bbs = new BookSpecStyleBean();
+                bbs.setBookName(bookShelf.getBookInfoBean().getName());//书名
+                bbs.setBookAuthor(bookShelf.getBookInfoBean().getAuthor());//作者
+                bbs.setStyleJson(GsonUtils.toJsonWithSerializeNulls(bookSpecStyle));
+
+
+                DbHelper.getDaoSession().getBookSpecStyleBeanDao().insertOrReplace(bbs);
+            }
+        }else{
+            //取消特定样式
+            DbHelper.getDaoSession().getBookSpecStyleBeanDao().delete(m);
+        }
+
+
+
+
+    }
+
+    @Override
+    public void updateBookSpecStyle(HashMap bookSpecStyle) {
+
+        BookSpecStyleBean  bbs = new BookSpecStyleBean();
+        bbs.setBookName(bookShelf.getBookInfoBean().getName());//书名
+        bbs.setBookAuthor(bookShelf.getBookInfoBean().getAuthor());//作者
+        bbs.setStyleJson(GsonUtils.toJsonWithSerializeNulls(bookSpecStyle));
+
+        DbHelper.getDaoSession().getBookSpecStyleBeanDao().update(bbs);
+
+    }
+
+
+    //@Override
+    public BookSpecStyleBean getBookSpecStyle(String bookName,String bookAuthor) {
+
+      List<BookSpecStyleBean> list =   DbHelper.getDaoSession().getBookSpecStyleBeanDao().queryBuilder()
+                .where(BookSpecStyleBeanDao.Properties.BookName.eq(bookName))
+                .where(BookSpecStyleBeanDao.Properties.BookAuthor.eq(bookAuthor))
+                .limit(1)
+                .list();
+
+      if(list.size()>0){
+          return list.get(0);
+      }else{
+          return  null;
+      }
+
     }
 
     /**
@@ -147,6 +275,11 @@ public class ReadBookPresenter extends BasePresenterImpl<ReadBookContract.View> 
     @Override
     public BookSourceBean getBookSource() {
         return bookSourceBean;
+    }
+
+    @Override
+    public void upBookSource() {
+        bookSourceBean = BookSourceManager.getBookSourceByUrl(bookShelf.getTag());
     }
 
     @Override
@@ -243,6 +376,7 @@ public class ReadBookPresenter extends BasePresenterImpl<ReadBookContract.View> 
                         chapterBeanList = value.getData2();
                         mView.changeSourceFinish(bookShelf);
                         String tag = bookShelf.getTag();
+                         upBookSource();
                         try {
                             long currentTime = System.currentTimeMillis();
                             String bookName = bookShelf.getBookInfoBean().getName();
@@ -287,6 +421,7 @@ public class ReadBookPresenter extends BasePresenterImpl<ReadBookContract.View> 
                     bookShelf = bookShelfBean;
                     ReadBookPresenter.this.chapterBeanList = chapterBeanList;
                     mView.changeSourceFinish(bookShelf);
+                    upBookSource();
                 } else {
                     mView.changeSourceFinish(null);
                 }
@@ -438,6 +573,12 @@ public class ReadBookPresenter extends BasePresenterImpl<ReadBookContract.View> 
     @Subscribe(thread = EventThread.MAIN_THREAD, tags = {@Tag(RxBusTag.UPDATE_READ)})
     public void updateRead(Boolean recreate) {
         mView.refresh(recreate);
+    }
+
+    @Subscribe(thread = EventThread.MAIN_THREAD, tags = {@Tag(RxBusTag.UPDATE_BOOK_SPEC_STYLE)})
+    public void updateBookSpecStyleFrom(HashMap m) {
+        //mView.refresh(recreate);
+        saveBookSpecStyle(m);
     }
 
     @Subscribe(thread = EventThread.MAIN_THREAD, tags = {@Tag(RxBusTag.ALOUD_STATE)})

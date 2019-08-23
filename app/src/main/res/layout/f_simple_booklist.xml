@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/mBookshelfTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:drawableEnd="@drawable/ic_drop"
+        android:drawablePadding="8dp"
+        android:gravity="center"
+        android:padding="6dp"
+        android:text="书单"
+        android:textColor="@color/colorTitle"
+        android:textSize="18.0sp" />
+
+<androidx.core.widget.NestedScrollView
+    android:id="@+id/ns_scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
+
+
+
+        <RelativeLayout
+            android:id="@+id/rl_aaa"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:animateLayoutChanges="true"
+            android:layout_below="@id/mBookshelfTitle"
+            android:descendantFocusability="blocksDescendants"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+            <com.kunfei.bookshelf.widget.flowlayout.TagFlowLayout
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_marginBottom="20dp"
+                android:animateLayoutChanges="true"
+                android:clickable="false">
+            </com.kunfei.bookshelf.widget.flowlayout.TagFlowLayout>
+
+
+    </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:animateLayoutChanges="true"
+            android:layout_below="@id/recycler_view"
+            android:descendantFocusability="blocksDescendants"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+        <androidx.recyclerview.widget.RecyclerView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/recycler_view_list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFD4D4D4"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_marginBottom="20dp"
+
+            >
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </RelativeLayout>
+
+        <RelativeLayout android:id="@+id/loadingLayout"
+            android:visibility="invisible"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <ProgressBar android:id="@+id/loadingBar"
+                android:layout_width="128.0dip"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:layout_above="@id/loadingTitle"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                style="?android:progressBarStyleHorizontal" />
+            <TextView android:textSize="15.0sp"
+                android:gravity="center"
+                android:id="@+id/loadingTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:includeFontPadding="false"
+                android:layout_centerInParent="true"
+                android:lineSpacingMultiplier="1.5" />
+        </RelativeLayout>
+    </LinearLayout>
+
+
+
+</androidx.core.widget.NestedScrollView>
+</LinearLayout>
+

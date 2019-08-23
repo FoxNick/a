@@ -111,7 +111,9 @@ public class MoDialogView extends LinearLayout {
         removeAllViews();
         LayoutInflater.from(getContext()).inflate(R.layout.mo_dialog_markdown, this, true);
         TextView tvMarkdown = findViewById(R.id.tv_markdown);
-        Markwon.create(tvMarkdown.getContext()).setMarkdown(tvMarkdown, ReadAssets.getText(context, assetFileName));
+        String aa = ReadAssets.getText(context, assetFileName);
+        aa = aa.substring(aa.indexOf("## 更新日志"));
+        Markwon.create(tvMarkdown.getContext()).setMarkdown(tvMarkdown, aa);
     }
 
     /**

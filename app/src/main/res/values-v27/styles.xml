@@ -5,11 +5,11 @@
     <style name="Base.V27.Theme.AppCompat" parent="@style/Base.V26.Theme.AppCompat" >
         <item name="android:navigationBarColor">#ff212121</item>
         <item name="android:windowLightNavigationBar">false</item>
-        <item name="android:navigationBarDividerColor">#ff545454</item>
+        <item name="android:navigationBarDividerColor">@color/transparent</item>
     </style>
     <style name="Base.V27.Theme.AppCompat.Light" parent="@style/Base.V26.Theme.AppCompat.Light">
         <item name="android:navigationBarColor">@android:color/white</item>
         <item name="android:windowLightNavigationBar">true</item>
-        <item name="android:navigationBarDividerColor">#ffdcdcdc</item>
+        <item name="android:navigationBarDividerColor">@color/transparent</item>
     </style>
 </resources>

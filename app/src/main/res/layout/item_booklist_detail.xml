@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:padding="@dimen/dimen2x"
+    android:layout_width="fill_parent"
+    android:background="#ffffff"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dimen1x"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="15.0sp"
+        android:textColor="@color/colorTitle"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:id="@+id/tv_book_name"
+        android:text="书名"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:drawablePadding="@dimen/dimen0x" />
+    <TextView
+        android:textSize="13.0sp"
+        android:id="@+id/tv_book_author"
+        android:text="作者：石狮"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen1x"
+        android:layout_below="@id/tv_book_name"
+        android:layout_marginEnd="12.0dip"
+ />
+    <TextView android:textSize="13.0sp"
+        android:id="@+id/tv_word_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="字数：1000万字"
+
+        android:layout_marginTop="@dimen/dimen1x"
+        android:layout_toEndOf="@id/tv_book_author"
+        android:layout_below="@id/tv_book_name"
+ />
+
+    <TextView android:textSize="13.0sp"
+        android:id="@+id/tv_book_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="描述ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        android:lines="1"
+        android:ellipsize="end"
+        android:textColor="@color/colorTitle"
+        android:layout_marginTop="@dimen/dimen1x"
+        android:layout_below="@id/tv_book_author"
+        />
+
+</RelativeLayout>

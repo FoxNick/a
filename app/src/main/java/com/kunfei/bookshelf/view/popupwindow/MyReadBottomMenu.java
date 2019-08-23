@@ -51,14 +51,14 @@ public class MyReadBottomMenu extends FrameLayout {
     LinearLayout llAdjust;
     @BindView(R.id.ll_font)
     LinearLayout llFont;
-    @BindView(R.id.ll_sound)
-    LinearLayout llSound;
+    @BindView(R.id.ll_change_source)
+    LinearLayout llChangeSource;
     @BindView(R.id.ll_setting)
     LinearLayout llSetting;
     @BindView(R.id.llNavigationBar)
     LinearLayout llNavigationBar;
-    //@BindView(R.id.ll_floating_button)
-    //LinearLayout llFloatingButton;
+    @BindView(R.id.ll_download)
+    LinearLayout llDownload;
     @BindView(R.id.vwNavigationBar)
     View vwNavigationBar;
 
@@ -150,8 +150,11 @@ public class MyReadBottomMenu extends FrameLayout {
         //界面
         llFont.setOnClickListener(view -> callback.openReadInterface());
 
-        //听书
-        llSound.setOnClickListener(view -> callback.openTTS());
+        //换源
+        llChangeSource.setOnClickListener(view -> callback.openChangeSource());
+
+        //下载
+        llDownload.setOnClickListener(view -> callback.openDownload());
 
         //设置
         llSetting.setOnClickListener(view -> callback.openMoreSetting());
@@ -223,6 +226,10 @@ public class MyReadBottomMenu extends FrameLayout {
         void skipNextChapter();
 
         void openTTS();
+
+        void openChangeSource();
+
+        void openDownload();
 
         void openChapterList();
 

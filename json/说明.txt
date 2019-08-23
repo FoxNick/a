@@ -98,3 +98,18 @@ https://raw.githubusercontent.com/804463258/a/master/json/aaa.json
 书单2
 https://raw.githubusercontent.com/804463258/a/master/json/bbb.json
 
+
+
+
+设计功能有哪些呢？
+
+1.增加”书单入口“，输入https://raw.githubusercontent.com/804463258/a/master/json/index.json 就行，自动加载名字，书单列表，保存到数据库。
+  保存成功后台自动获取书单存入数据库。
+2.实时同步：所有不落地直接从网络获取
+2. 数据落地，同步不删除本地书单。
+
+展示页面
+
+
+
+

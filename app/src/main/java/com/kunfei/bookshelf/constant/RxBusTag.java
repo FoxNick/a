@@ -7,6 +7,7 @@ public class RxBusTag {
     public final static String UPDATE_GROUP = "UPDATE_GROUP";
     public final static String UPDATE_BOOK_PROGRESS = "update_book_progress";
     public final static String UPDATE_READ = "update_read";
+    public final static String UPDATE_BOOK_SPEC_STYLE = "update_book_spec_style";
     public final static String CHAPTER_CHANGE = "chapter_change";
     public final static String MEDIA_BUTTON = "media_button";
     public final static String ALOUD_STATE = "aloud_state";
@@ -36,6 +37,9 @@ public class RxBusTag {
     public final static String SOURCE_LIST_CHANGE = "sourceListChange";
     public final static String UPDATE_PX = "update_px";
     public final static String UPDATE_UI = "update_ui";
+
+    public final static String UPDATE_BOOK_LIST = "update_book_list";
+
 
 
 

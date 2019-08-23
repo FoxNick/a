@@ -25,4 +25,18 @@
     <dimen name="fastscroll_scrollbar_padding_end">8dp</dimen>
 
 
+    <dimen name="dimen0x">4.0dip</dimen>
+    <dimen name="dimen1">1.0dip</dimen>
+    <dimen name="dimen1v">10.0dip</dimen>
+    <dimen name="dimen1x">8.0dip</dimen>
+    <dimen name="dimen2v">20.0dip</dimen>
+    <dimen name="dimen2x">16.0dip</dimen>
+    <dimen name="dimen3v">30.0dip</dimen>
+    <dimen name="dimen3x">24.0dip</dimen>
+    <dimen name="dimen4v">40.0dip</dimen>
+    <dimen name="dimen4x">32.0dip</dimen>
+    <dimen name="dimen6x">48.0dip</dimen>
+    <dimen name="dimen7x">56.0dip</dimen>
+    <dimen name="dimen8x">64.0dip</dimen>
+
 </resources>

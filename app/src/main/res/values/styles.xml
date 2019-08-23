@@ -112,6 +112,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.White" parent="CAppTheme">
+
+    </style>
+
 
     <style name="MyEditText" parent="Theme.AppCompat.Light">
         <item name="colorControlNormal">@color/colorPrimaryRead</item>
@@ -139,6 +143,13 @@
         <item name="android:layout_marginTop">@dimen/card_item_margin</item>
         <item name="android:layout_marginBottom">@dimen/card_item_margin</item>
     </style>
+
+
+    <style name="TabTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
 
 
 </resources>

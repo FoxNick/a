@@ -5,6 +5,7 @@
     <string name="pk_user_agent">user_agent</string>
     <string name="pk_bookshelf_px">bookshelf_px</string>
     <string name="pk_bookshelf_show">bookshelf_show</string>
+    <string name="pk_bookshelf_space">bookshelf_space</string>
     <string name="pk_find_expand_group">expandGroupFind</string>
     <string name="pk_default_read">defaultToRead</string>
     <string name="pk_auto_download">autoDownload</string>

@@ -222,6 +222,7 @@ public abstract class PageLoader {
         displayRightEnd = mDisplayWidth - tipMarginRight;
         tipVisibleWidth = mDisplayWidth - tipMarginLeft - tipMarginRight;
 
+
         // 获取内容显示位置的大小
         mVisibleWidth = mDisplayWidth - mMarginLeft - mMarginRight;
         mVisibleHeight = readBookControl.getHideStatusBar()
@@ -239,14 +240,22 @@ public abstract class PageLoader {
     private void setUpTextParams() {
         // 文字大小
         mTextSize = ScreenUtils.spToPx(readBookControl.getTextSize());
-        mTitleSize = mTextSize + oneSpPx * 10;
+
+        mTitleSize = ScreenUtils.spToPx(readBookControl.getTitleSize());
         mTextEndSize = mTextSize - oneSpPx;
-        // 行间距(大小为字体的一半)
-        mTextInterval = (int) (mTextSize * readBookControl.getLineMultiplier() / 2);
-        mTitleInterval = (int) (mTitleSize * readBookControl.getLineMultiplier() / 2);
-        // 段落间距(大小为字体的高度)
-        mTextPara = (int) (mTextSize * readBookControl.getLineMultiplier() * readBookControl.getParagraphSize() / 2);
-        mTitlePara = (int) (mTitleSize * readBookControl.getLineMultiplier() * readBookControl.getParagraphSize() / 2);
+        // 行间距
+        mTextInterval = (int) readBookControl.getLineMultiplier() ;
+        mTitleInterval = (int) readBookControl.getLineMultiplier();
+        // 段落间距
+        mTextPara = (int)readBookControl.getParagraphSize();
+        mTitlePara =  (int)readBookControl.getParagraphSize();
+
+
+         mFirstPageMarginTop = (int) readBookControl.getFirstPageMarginTop() ;//標題上面空白
+
+         mFirstPageMarginButtom =  (int) readBookControl.getFirstPageMarginButtom()  ;//標題下方空白
+
+
     }
 
     /**
@@ -254,6 +263,7 @@ public abstract class PageLoader {
      */
     private void initPaint() {
         Typeface typeface;
+        Typeface chapterTypeface;
         try {
             if (!TextUtils.isEmpty(readBookControl.getFontPath())) {
                 typeface = Typeface.createFromFile(readBookControl.getFontPath());
@@ -265,6 +275,19 @@ public abstract class PageLoader {
             readBookControl.setReadBookFont(null);
             typeface = Typeface.SANS_SERIF;
         }
+
+        try {
+            if (!TextUtils.isEmpty(readBookControl.getChapterFontPath())) {
+                chapterTypeface = Typeface.createFromFile(readBookControl.getChapterFontPath());
+            } else {
+                chapterTypeface = Typeface.SANS_SERIF;
+            }
+        } catch (Exception e) {
+            Toast.makeText(mContext, "字体文件未找,到恢复默认字体", Toast.LENGTH_SHORT).show();
+            readBookControl.setChapterBookFont(null);
+            chapterTypeface = Typeface.SANS_SERIF;
+        }
+
         // 绘制提示的画笔
         mTipPaint = new TextPaint();
         mTipPaint.setColor(readBookControl.getTextColor());
@@ -282,7 +305,7 @@ public abstract class PageLoader {
             mTitlePaint.setLetterSpacing(readBookControl.getTextLetterSpacing());
         }
         mTitlePaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        mTitlePaint.setTypeface(Typeface.create(typeface, Typeface.BOLD));
+        mTitlePaint.setTypeface(Typeface.create(chapterTypeface, Typeface.BOLD));
         mTitlePaint.setTextAlign(Paint.Align.CENTER);
         mTitlePaint.setAntiAlias(true);
 
@@ -889,6 +912,11 @@ public abstract class PageLoader {
     @SuppressLint("DefaultLocale")
     private synchronized void drawBackground(final Canvas canvas, TxtChapter txtChapter, TxtPage txtPage) {
         if (canvas == null) return;
+
+        mTipPaint.setColor(readBookControl.getTextColor());
+
+        boolean showTitle = readBookControl.getShowTitle(); // 是否展示标题
+
         if (!callback.getChapterList().isEmpty()) {
             String title = callback.getChapterList().size() > txtChapter.getPosition() ? callback.getChapterList().get(txtChapter.getPosition()).getDurChapterName() : "";
             title = ChapterContentHelp.getInstance().replaceContent(book.getBookInfoBean().getName(), book.getTag(), title);
@@ -899,7 +927,7 @@ public abstract class PageLoader {
             if(progressDisplay==0){
                 progress = (txtChapter.getStatus() != TxtChapter.Status.FINISH) ? ""
                         : "第"+(mCurChapterPos+1) +"/"+ book.getChapterListSize()+"章";
-            }else{
+            }else if(progressDisplay==1){
                 progress = (txtChapter.getStatus() != TxtChapter.Status.FINISH) ? ""
                         : BookshelfHelp.getReadProgress(mCurChapterPos, book.getChapterListSize(), mCurPagePos, curChapter().txtChapter.getPageSize());
             }
@@ -920,15 +948,20 @@ public abstract class PageLoader {
                     tipLeft = displayRightEnd - mTipPaint.measureText(progress);
                     canvas.drawText(progress, tipLeft, tipBottomBot, mTipPaint);
                     //绘制页码
-                    tipLeft = tipLeft - tipDistance - mTipPaint.measureText(page);
+                    if(progressDisplay==2) {//没有显示进度
+                        tipLeft = tipLeft  - mTipPaint.measureText(page);
+                    }else {
+                        tipLeft = tipLeft - tipDistance - mTipPaint.measureText(page);
+                    }
                     canvas.drawText(page, tipLeft, tipBottomBot, mTipPaint);
                     //绘制标题
                     title = TextUtils.ellipsize(title, mTipPaint, tipLeft - tipDistance, TextUtils.TruncateAt.END).toString();
                     canvas.drawText(title, tipMarginLeft, tipBottomBot, mTipPaint);
 
                     //如果是第一页,则左上角显示书名
-                    if(txtPage!=null && txtPage.getPosition()==0){
+                    if(showTitle && txtPage!=null && txtPage.getPosition()==0){
                         String bookTitle = book.getBookInfoBean().getName();
+                        
                         canvas.drawText(bookTitle, tipMarginLeft, tipBottomTop + mPageView.getStatusBarHeight(), mTipPaint);
                     }
 
@@ -951,7 +984,7 @@ public abstract class PageLoader {
                     title = TextUtils.ellipsize(title, mTipPaint, titleTipLength, TextUtils.TruncateAt.END).toString();
 
                     //如果是第一页,则左上角显示书名
-                    if(txtPage!=null && txtPage.getPosition()==0){
+                    if(showTitle && txtPage!=null && txtPage.getPosition()==0){
                         title = book.getBookInfoBean().getName();
                     }
                     canvas.drawText(title, tipMarginLeft, tipBottomTop, mTipPaint);
@@ -1902,6 +1935,39 @@ public abstract class PageLoader {
             }
             aa = new ArrayList();
         }
+
+        if(mCurChapterPos ==0){//第一页，
+
+            if(aa.size()==2){
+
+                if(readBookControl.getLoadingAmin()) {
+                    callback.finishLoading();
+                }
+                aa = new ArrayList();
+            }
+        }
+
+        if(callback.getChapterList().size() == mCurChapterPos + 1){
+            if(aa.size()==2){
+
+                if(readBookControl.getLoadingAmin()) {
+                    callback.finishLoading();
+                }
+                aa = new ArrayList();
+            }
+        }
+
+
+         if(callback.getChapterList().size() == 1){
+	         if(aa.size()==1){
+
+                if(readBookControl.getLoadingAmin()) {
+                    callback.finishLoading();
+                }
+                aa = new ArrayList();
+            }
+	      }
+
 
 
         Log.d("ceshi:upTextChapter","out");

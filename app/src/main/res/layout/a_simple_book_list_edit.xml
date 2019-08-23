@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="?attr/actionBarStyle"
+        android:transitionName="sharedView"
+        tools:ignore="UnusedAttribute">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#ffffffff"
+            app:popupTheme="@style/AppTheme.PopupOverlay" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:text="编辑书单"
+                android:textColor="@color/colorTitle"
+                android:textSize="18sp" />
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0"
+        >
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <com.kunfei.bookshelf.widget.BoldTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen2v"
+                android:text="书单源地址"
+                android:layout_marginStart="@dimen/dimen2v"
+                />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:textSize="14.0sp"
+                android:textColor="@color/colorTitle"
+                android:id="@+id/et_url"
+                android:background="@android:color/transparent"
+                android:paddingTop="@dimen/dimen1v"
+                android:paddingBottom="@dimen/dimen1v"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:imeOptions="actionDone"
+                android:layout_marginStart="@dimen/dimen2v"
+                android:layout_marginEnd="@dimen/dimen2v" />
+            <View android:background="#ff2066ff"
+                android:layout_width="fill_parent"
+                android:layout_height="1.5999756dip"
+                android:layout_marginStart="@dimen/dimen2v"
+                android:layout_marginEnd="@dimen/dimen2v" />
+        </LinearLayout>
+
+            <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+                android:visibility="gone"
+            android:layout_height="wrap_content">
+            <com.kunfei.bookshelf.widget.BoldTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen2v"
+                android:text="编辑"
+                android:layout_marginStart="@dimen/dimen2v"
+                />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:textSize="14.0sp"
+                android:textColor="@color/colorTitle"
+                android:id="@+id/mBookshelfNameInput1"
+                android:background="@android:color/transparent"
+                android:paddingTop="@dimen/dimen1v"
+                android:paddingBottom="@dimen/dimen1v"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:imeOptions="actionDone"
+                android:layout_marginStart="@dimen/dimen2v"
+                android:layout_marginEnd="@dimen/dimen2v" />
+            <View android:background="#ff2066ff"
+                android:layout_width="fill_parent"
+                android:layout_height="1.5999756dip"
+                android:layout_marginStart="@dimen/dimen2v"
+                android:layout_marginEnd="@dimen/dimen2v" />
+        </LinearLayout>
+
+            <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <com.kunfei.bookshelf.widget.BoldTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen2v"
+                android:text="标题"
+                android:layout_marginStart="@dimen/dimen2v"
+                />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:textSize="14.0sp"
+                android:textColor="@color/colorTitle"
+                android:id="@+id/et_title"
+                android:background="@android:color/transparent"
+                android:paddingTop="@dimen/dimen1v"
+                android:paddingBottom="@dimen/dimen1v"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="10"
+                android:singleLine="true"
+                android:imeOptions="actionDone"
+                android:layout_marginStart="@dimen/dimen2v"
+                android:layout_marginEnd="@dimen/dimen2v" />
+            <View android:background="#ff2066ff"
+                android:layout_width="fill_parent"
+                android:layout_height="1.5999756dip"
+                android:layout_marginStart="@dimen/dimen2v"
+                android:layout_marginEnd="@dimen/dimen2v" />
+        </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:visibility="gone"
+                android:layout_height="wrap_content">
+                <com.kunfei.bookshelf.widget.BoldTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen2v"
+                    android:text="书单数量"
+                    android:layout_marginStart="@dimen/dimen2v"
+                    />
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:textSize="14.0sp"
+                    android:textColor="@color/colorTitle"
+                    android:id="@+id/mBookshelfNameInput3"
+                    android:background="@android:color/transparent"
+                    android:paddingTop="@dimen/dimen1v"
+                    android:paddingBottom="@dimen/dimen1v"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="10"
+                    android:singleLine="true"
+                    android:imeOptions="actionDone"
+                    android:layout_marginStart="@dimen/dimen2v"
+                    android:layout_marginEnd="@dimen/dimen2v" />
+                <View android:background="#ff2066ff"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1.5999756dip"
+                    android:layout_marginStart="@dimen/dimen2v"
+                    android:layout_marginEnd="@dimen/dimen2v" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:visibility="gone"
+                android:layout_height="wrap_content">
+                <com.kunfei.bookshelf.widget.BoldTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen2v"
+                    android:text="最后更新时间"
+                    android:layout_marginStart="@dimen/dimen2v"
+                    />
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:textSize="14.0sp"
+                    android:textColor="@color/colorTitle"
+                    android:id="@+id/mBookshelfNameInput4"
+                    android:background="@android:color/transparent"
+                    android:paddingTop="@dimen/dimen1v"
+                    android:paddingBottom="@dimen/dimen1v"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="10"
+                    android:singleLine="true"
+                    android:imeOptions="actionDone"
+                    android:layout_marginStart="@dimen/dimen2v"
+                    android:layout_marginEnd="@dimen/dimen2v" />
+                <View android:background="#ff2066ff"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1.5999756dip"
+                    android:layout_marginStart="@dimen/dimen2v"
+                    android:layout_marginEnd="@dimen/dimen2v" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:visibility="gone"
+                android:layout_height="wrap_content">
+                <com.kunfei.bookshelf.widget.BoldTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen2v"
+                    android:text="更新频率"
+                    android:layout_marginStart="@dimen/dimen2v"
+                    />
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:textSize="14.0sp"
+                    android:textColor="@color/colorTitle"
+                    android:id="@+id/mBookshelfNameInput5"
+                    android:background="@android:color/transparent"
+                    android:paddingTop="@dimen/dimen1v"
+                    android:paddingBottom="@dimen/dimen1v"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="10"
+                    android:singleLine="true"
+                    android:imeOptions="actionDone"
+                    android:layout_marginStart="@dimen/dimen2v"
+                    android:layout_marginEnd="@dimen/dimen2v" />
+                <View android:background="#ff2066ff"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1.5999756dip"
+                    android:layout_marginStart="@dimen/dimen2v"
+                    android:layout_marginEnd="@dimen/dimen2v" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/book_detail_bottom_layout"
+        android:background="#ffffffff"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen1v"
+        android:elevation="@dimen/dimen1v">
+        <LinearLayout android:orientation="horizontal"
+            android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <com.kunfei.bookshelf.widget.BoldTextView android:textSize="16.0sp"
+                android:textColor="#ff2d2d33"
+                android:gravity="center"
+                android:id="@+id/btv_del"
+                android:background="?selectableItemBackground"
+                android:padding="@dimen/dimen2x"
+                android:visibility="gone"
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:text="删除"
+                android:layout_weight="1.0" />
+            <com.kunfei.bookshelf.widget.BoldTextView
+                android:textSize="16.0sp"
+                android:textColor="#ff2066ff"
+                android:gravity="center"
+                android:id="@+id/btv_save"
+                android:background="?selectableItemBackground"
+                android:padding="@dimen/dimen2x"
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:text="保存"
+                android:layout_weight="1.0" />
+        </LinearLayout>
+        <View android:background="#ffeaeaea" android:layout_width="fill_parent" android:layout_height="0.39999998dip" />
+    </RelativeLayout>
+</LinearLayout>

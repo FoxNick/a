@@ -9,12 +9,14 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Vibrator;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.WindowManager;
 
 import com.kunfei.bookshelf.bean.BookShelfBean;
 import com.kunfei.bookshelf.help.FileHelp;
@@ -35,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static android.content.Context.VIBRATOR_SERVICE;
 import static com.kunfei.bookshelf.utils.ScreenUtils.getDisplayMetrics;
 
 
@@ -94,6 +97,10 @@ public class PageView extends View {
 
     //是否在移动
     private boolean isMove = false;
+
+    //上下活
+    private boolean isUpDown = false;
+
 
 
     //长按的runnable
@@ -677,6 +684,30 @@ public class PageView extends View {
         return true;
     }
 
+
+    /*
+     *
+     * 设置屏幕亮度 lp = 0 全暗 ，lp= -1,根据系统设置， lp = 1; 最亮
+     */
+    public void setBrightness(float brightness) {
+        readBookControl.setLightFollowSys(false);
+
+        WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+        lp.screenBrightness = lp.screenBrightness + brightness / 255.0f;
+        if (lp.screenBrightness > 1) {
+            lp.screenBrightness = 1;
+
+        } else if (lp.screenBrightness < 0) {
+            lp.screenBrightness = (float) 0;
+        }
+
+
+       Integer light =  (int) (lp.screenBrightness  * 255.0f);
+
+        readBookControl.setLight(light);
+        getActivity().getWindow().setAttributes(lp);
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -736,6 +767,7 @@ public class PageView extends View {
                 mStartX = x;
                 mStartY = y;
                 isMove = false;
+                isUpDown = false;
 
 
                 //
@@ -746,7 +778,7 @@ public class PageView extends View {
                 //
                 isLongPress = false;
                 canTouch = mTouchListener.onTouch();
-                mPageAnim.onTouchEvent(event);
+                //mPageAnim.onTouchEvent(event);
 
                 mCurrentMode = Mode.Normal;
 
@@ -757,15 +789,50 @@ public class PageView extends View {
                 // 判断是否大于最小滑动值。
                 int slop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
                 if (!isMove) {
-                    isMove = Math.abs(mStartX - event.getX()) > TOUCH_SLOP || Math.abs(mStartY - event.getY()) > TOUCH_SLOP;
+                    isMove = Math.abs(mStartX - event.getX()) > TOUCH_SLOP ;
                 }
 
-                // 如果滑动了,且不是长按，则进行翻页。
-                if (isMove) {
+                if (readBookControl.getLeftBrightness() && !isUpDown) {
+                    //isUpDown =  Math.abs(mStartY - event.getY()) > TOUCH_SLOP;
+
+                    float distanceY = mStartY - event.getY();//滑动距离
+
+                    if (event.getX() < mViewWidth/2){
+                        //左边屏幕 调节亮度
+                        final double FLING_MIN_DISTANCE = 40 ;
+                        final double FLING_MIN_VELOCITY = 40 ;
+                        if (distanceY > FLING_MIN_DISTANCE
+                                && Math.abs(distanceY) > FLING_MIN_VELOCITY) {
+                            //  Log.e(TAG, "up");
+                            setBrightness(20);
+                            isUpDown = true;
+                        }
+                        if (distanceY < FLING_MIN_DISTANCE
+                                && Math.abs(distanceY) > FLING_MIN_VELOCITY) {
+                            // Log.e(TAG, "down");
+                            setBrightness(-20);
+                            isUpDown = true;
+                        }
+                    }
+                }
+
+
+
+
+
+                // 如果滑动了,且不是shagnxxia，则进行翻页。
+                if (isMove && !isUpDown) {
                     if(LONG_PRESS_TIMEOUT!=0) {
                         removeCallbacks(mLongPressRunnable);
                     }
                     mPageAnim.onTouchEvent(event);
+                }
+
+                if (isUpDown) {
+                    if(LONG_PRESS_TIMEOUT!=0) {
+                        removeCallbacks(mLongPressRunnable);
+                    }
+
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -773,7 +840,7 @@ public class PageView extends View {
                 mPageAnim.initTouch(x, y);
                 mPageAnim.setTouchInitFalse();
 
-                if (!isMove) {
+                if (!isMove && !isUpDown) {
                     if(LONG_PRESS_TIMEOUT!=0) {
                         removeCallbacks(mLongPressRunnable);
                     }

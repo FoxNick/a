@@ -102,7 +102,7 @@ public class MyTTSBottomMenu extends FrameLayout {
         sbTTSPitch.setSecondaryProgress(1);
 
         sbTTSSpeed.setMax(20);
-        sbTTSSpeed.setProgress(readBookControl.getSpeechRate() - 5);
+        sbTTSSpeed.setProgress(readBookControl.getSpeechRate());
         sbTTSSpeed.setSecondaryProgress(1);
     }
 

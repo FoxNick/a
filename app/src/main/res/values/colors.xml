@@ -32,7 +32,10 @@
     <color name="btn_bg_press_2">#80858585</color>
     <color name="btn_bg_press_tp">#88000000</color>
 
-    <color name="tv_text_default">#de000000</color>
+    <!-- eink特殊修改-->
+
+
+    <color name="tv_text_default">#000000</color>
     <color name="colorTextSecondary">#636363</color>
 
 
@@ -105,7 +108,7 @@
     <!---->
 
 
-    <color name="splash_background">#587A8A</color>
+    <color name="splash_background">#eeeeee</color>
 
 
     <color name="search_list_item">#ffffff</color>
@@ -131,5 +134,10 @@
 
     <color name="tv_text_replace_hint">#FFD4D4D4</color>
 
+
+    <color name="rippelColor">#FFD4D4D4</color>
+
+
+    <color name="colorTitle">#2d2d33</color>
 
 </resources>

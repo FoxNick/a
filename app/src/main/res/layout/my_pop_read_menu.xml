@@ -225,14 +225,14 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2" />
-                <!--听书按钮-->
+                <!--换源按钮-->
                 <LinearLayout
-                    android:id="@+id/ll_sound"
+                    android:id="@+id/ll_change_source"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@drawable/bg_ib_pre_round"
                     android:clickable="true"
-                    android:contentDescription="听书"
+                    android:contentDescription="换源"
                     android:focusable="true"
                     android:orientation="vertical"
                     android:paddingBottom="7dp">
@@ -241,8 +241,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:contentDescription="听书"
-                        android:src="@drawable/ic_headphones"
+                        android:contentDescription="换源"
+                        android:src="@drawable/ic_exchange"
                         android:tint="#ffffffff"
                         tools:ignore="NestedWeights" />
 
@@ -251,7 +251,42 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="3dp"
-                        android:text="听书"
+                        android:text="换源"
+                        android:textColor="#ffffffff"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+                <!--下载按钮-->
+                <LinearLayout
+                    android:id="@+id/ll_download"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bg_ib_pre_round"
+                    android:clickable="true"
+                    android:contentDescription="@string/setting"
+                    android:focusable="true"
+                    android:orientation="vertical"
+                    android:paddingBottom="7dp">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/setting"
+                        android:src="@drawable/ic_download_line_read"
+                        android:tint="#ffffffff"
+                        tools:ignore="NestedWeights" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="3dp"
+                        android:text="@string/download"
                         android:textColor="#ffffffff"
                         android:textSize="12sp" />
                 </LinearLayout>

@@ -75,7 +75,6 @@ import com.kunfei.bookshelf.view.popupwindow.MyReadBottomMenu;
 import com.kunfei.bookshelf.view.popupwindow.MyReadInterfacePop;
 import com.kunfei.bookshelf.view.popupwindow.MyTTSBottomMenu;
 import com.kunfei.bookshelf.view.popupwindow.ReadAdjustPop;
-import com.kunfei.bookshelf.view.popupwindow.ReadBottomMenu;
 import com.kunfei.bookshelf.view.popupwindow.ReadLongPressPop;
 import com.kunfei.bookshelf.widget.modialog.BookmarkDialog;
 import com.kunfei.bookshelf.widget.modialog.ChangeSourceDialog;
@@ -104,6 +103,8 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.kunfei.bookshelf.view.activity.SourceEditActivity.EDIT_SOURCE;
+
 
 /**
  * 阅读界面
@@ -124,8 +125,8 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
     TextView atvUrl;
     @BindView(R.id.atv_name)
     TextView atvName;
-    @BindView(R.id.atv_line)
-    View atvLine;
+    @BindView(R.id.ll_nav)
+    LinearLayout llNav;
     @BindView(R.id.ll_menu_top)
     LinearLayout llMenuTop;
     @BindView(R.id.appBar)
@@ -189,6 +190,7 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
     private boolean aloudNextPage;
     private List<HashMap> replaceList = new ArrayList<HashMap>();
 
+
     @Override
     protected ReadBookContract.Presenter initInjector() {
         return new ReadBookPresenter();
@@ -200,6 +202,9 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
             noteUrl = savedInstanceState.getString("noteUrl");
             isAdd = savedInstanceState.getBoolean("isAdd");
         }
+        //特定书籍样式加载
+        readBookControl.setBookSpecStyle(null);
+
         readBookControl.initTextDrawableIndex();
         super.onCreate(savedInstanceState);
         screenTimeOut = getResources().getIntArray(R.array.screen_time_out_value)[readBookControl.getScreenTimeOut()];
@@ -528,6 +533,7 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
         ButterKnife.bind(this);
         this.setSupportActionBar(toolbar);
         setupActionBar();
+
         mPresenter.initData(this);
         appBar.setPadding(0, ScreenUtils.getStatusBarHeight(), 0, 0);
         appBar.setBackgroundColor(ThemeStore.primaryColor(this));
@@ -543,6 +549,20 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
         initReadLongPressPop();
         pageView.setBackground(readBookControl.getTextBackground(this));
 
+        initReadNav();
+
+
+
+
+    }
+
+
+    private void initReadNav(){
+        if(readBookControl.getShowReadingNav()) {
+            llNav.setVisibility(View.VISIBLE);
+        }else{
+            llNav.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -638,6 +658,21 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
             }
 
             @Override
+            public void openChangeSource() {
+                //进入换源界面
+                changeSource();
+            }
+
+
+            
+
+            @Override
+            public void openDownload() {
+
+                download();
+            }
+
+            @Override
             public void openReadInterface() {
                 MyReadBookActivity.this.popMenuOut();
                 mHandler.postDelayed(MyReadBookActivity.this::readInterfaceIn, menuBottomOut.getDuration() + 100);
@@ -684,11 +719,26 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
         });
     }
 
+
+    @Override
+    public void upBook(HashMap m) {
+
+        //readBookControl.setBookSpecStyle(m);
+
+    }
+
     /**
      * 初始化界面设置
      */
     private void initReadInterfacePop() {
         readInterfacePop.setListener(this, new MyReadInterfacePop.OnChangeProListener() {
+
+            @Override
+            public void upBookSpecStyle( Map<String,String> m) {
+
+                mPresenter.saveBookSpecStyle(m);
+
+            }
 
             @Override
             public void upPageMode() {
@@ -871,6 +921,11 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
             }
 
             @Override
+            public void upReadNav() {
+                initReadNav();
+            }
+
+            @Override
             public void keepScreenOnChange(int keepScreenOn) {
                 screenTimeOut = getResources().getIntArray(R.array.screen_time_out_value)[keepScreenOn];
                 screenOffTimerStart();
@@ -901,6 +956,13 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
                 startActivity(intent);
             } catch (Exception e) {
                 toast(R.string.can_not_open);
+            }
+        });
+
+        //打开书源编辑
+        atvName.setOnClickListener(view -> {
+            if (mPresenter.getBookSource() != null) {
+                SourceEditActivity.startThis(this, mPresenter.getBookSource());
             }
         });
 
@@ -1006,6 +1068,9 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
         }
         initPageView();
 
+        //有样式数据是从数据库加载的
+        readBookControl.initTextDrawableIndex();
+        initReadInterfacePop();
         //mediaPlayerPop.setCover(mPresenter.getBookShelf().getCustomCoverPath() != null ? mPresenter.getBookShelf().getCustomCoverPath()
         //        : mPresenter.getBookShelf().getBookInfoBean().getCoverUrl());
     }
@@ -1204,6 +1269,13 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
         mPageLoader.refreshChapterList();
     }
 
+    public  String  getBookName(){
+        return mPresenter.getBookShelf().getBookInfoBean().getName();
+    }
+
+    public  String  getBookAuthor(){
+        return mPresenter.getBookShelf().getBookInfoBean().getAuthor();
+    }
 
     public  void showAction(View clickView){
 
@@ -1288,7 +1360,11 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
                 oldRuleBean.setIsRegex(false);
                 oldRuleBean.setReplacement("");
                 oldRuleBean.setSerialNumber(0);
-                oldRuleBean.setUseTo("");
+
+                BookShelfBean bookShelfBean = mPresenter.getBookShelf();
+                if (bookShelfBean != null) {
+                	oldRuleBean.setUseTo((String.format("%s,%s", bookShelfBean.getBookInfoBean().getName(), bookShelfBean.getTag())));
+            	}
 
                 moDialogHUD.showPutReplaceRule(oldRuleBean, ruleBean -> {
                     Observable.create((ObservableOnSubscribe<ReplaceRuleBean>) e -> {
@@ -1369,8 +1445,11 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
                 selectSource();
                 break;
             */
-            case R.id.action_change_source:
-                changeSource();
+            case R.id.action_sound:
+				//进入朗读模式界面
+                mHandler.postDelayed(MyReadBookActivity.this::tTSIn, menuBottomOut.getDuration() + 100);
+                MyReadBookActivity.this.onMediaButton();
+                
                 break;
             case R.id.action_refresh:
                 refreshDurChapter();
@@ -1378,7 +1457,13 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
             case R.id.action_download:
                 download();
                 break;
+            case R.id.action_clear_cache:
+                mPresenter.clearCaches(mPresenter.getBookShelf());
+                break;
             case R.id.add_bookmark:
+                showBookmark(null);
+                break;
+            case R.id.add_bookmark1:
                 showBookmark(null);
                 break;
             case R.id.action_copy_text:
@@ -1646,6 +1731,7 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
      */
     private void moreSettingIn() {
         flMenu.setVisibility(View.VISIBLE);
+        moreSettingPop.show();
         moreSettingPop.setVisibility(View.VISIBLE);
         moreSettingPop.startAnimation(menuBottomIn);
     }
@@ -1985,11 +2071,11 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
         if (onLine) {
             atvUrl.setVisibility(View.VISIBLE);
             atvName.setVisibility(View.VISIBLE);
-            atvLine.setVisibility(View.VISIBLE);
+            //atvLine.setVisibility(View.VISIBLE);
         } else {
             atvUrl.setVisibility(View.GONE);
             atvName.setVisibility(View.GONE);
-            atvLine.setVisibility(View.GONE);
+            //atvLine.setVisibility(View.GONE);
         }
         for (int i = 0; i < menu.size(); i++) {
             switch (menu.getItem(i).getGroupId()) {
@@ -2132,6 +2218,11 @@ public class MyReadBookActivity extends MBaseActivity<ReadBookContract.Presenter
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         initImmersionBar();
+        if (requestCode == EDIT_SOURCE) {
+            if (resultCode == RESULT_OK) {
+                mPresenter.upBookSource();
+            }
+        }
     }
 
     @SuppressLint("DefaultLocale")
