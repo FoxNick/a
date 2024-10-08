@@ -3,6 +3,8 @@ package com.kunfei.bookshelf.utils.web_dav;
 import com.kunfei.bookshelf.utils.web_dav.http.Handler;
 import com.kunfei.bookshelf.utils.web_dav.http.HttpAuth;
 import com.kunfei.bookshelf.utils.web_dav.http.OkHttp;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -54,7 +56,7 @@ public class WebDavFile {
     private OkHttpClient okHttpClient;
 
     public WebDavFile(String url) throws MalformedURLException {
-        this.url = new URL(null, url, Handler.HANDLER);
+        this.url = Urls.create(null, url, Handler.HANDLER, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         okHttpClient = OkHttp.getInstance().client();
     }
 
