@@ -12,6 +12,8 @@ import com.kunfei.bookshelf.bean.SearchBookBean;
 import com.kunfei.bookshelf.model.BookSourceManager;
 import com.kunfei.bookshelf.model.analyzeRule.AnalyzeHeaders;
 import com.kunfei.bookshelf.model.analyzeRule.AnalyzeUrl;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -42,7 +44,7 @@ public class WebBook extends BaseModelImpl {
     private WebBook(String tag) {
         this.tag = tag;
         try {
-            URL url = new URL(tag);
+            URL url = Urls.create(tag, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             name = url.getHost();
         } catch (MalformedURLException e) {
             name = tag;
