@@ -9,6 +9,7 @@ import com.kunfei.bookshelf.R;
 import com.kunfei.bookshelf.bean.FindKindGroupBean;
 import com.kunfei.bookshelf.bean.MyFindKindGroupBean;
 import com.kunfei.bookshelf.widget.flowlayout.TagAdapter;
+import java.security.SecureRandom;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -44,7 +45,7 @@ public class FindFlowAdapter extends TagAdapter<MyFindKindGroupBean> {
         tv.setTag(findKindGroupBean.getGroupTag());
         tv.setText(findKindGroupBean.getGroupName());
 
-        Random myRandom = new Random();
+        Random myRandom = new SecureRandom();
         int ranColor = 0xff000000 | myRandom.nextInt(0x00ffffff);
         //tv.setBackgroundColor(ranColor);
 
